@@ -15,3 +15,4 @@ To create the Federating Learining application go to [iroha](iroha/)
 ### Prerequisites
 1. [Python 3](https://www.python.org/download/releases/3.0/)
 2. Hyperledger [Iroha](https://github.com/hyperledger/iroha)
+3. [PostgreSQL](https://www.postgresql.org/)
