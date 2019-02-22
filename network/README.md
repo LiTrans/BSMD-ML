@@ -1,4 +1,4 @@
-# Instruction for running the BSMD
+# Instructions for running the BSMD
 
 1. Download the Iroha binaries from this [link](https://www.dropbox.com/s/a886c3bl38qg5le/iroha.tar.xz?dl=0)
 2. Decompress the file in the 'network' folder
