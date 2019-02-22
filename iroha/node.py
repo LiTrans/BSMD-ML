@@ -22,8 +22,8 @@ functions.create_account_user(name,user_public_key,domain,'1000')
 data = functions.get_balance(iroha,network,account_id,user_private_key)
 
 
-functions.grants_access_to_set_details()
-functions.set_detail_to_node()
+
+# functions.set_detail_to_node()
 print('Resultados')
 print(data)
 
