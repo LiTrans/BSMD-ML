@@ -9,6 +9,7 @@ Users are always in control of their information as no raw personal information 
 ## Getting Started
 
 To install the Iroha blockchain go to [network](network/)
+
 To create the Federating Learining application go to [iroha](iroha/)
 
 ### Prerequisites
