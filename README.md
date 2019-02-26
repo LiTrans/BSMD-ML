@@ -8,9 +8,9 @@ Users are always in control of their information as no raw personal information 
 
 ## Getting Started
 
-To install the Iroha blockchain go to [network](network/)
+1. To install the Iroha blockchain go to [network](network/)
 
-To create the Federating Learining application go to [iroha](iroha/)
+2. To create the Federating Learining application go to [iroha](iroha/)
 
 ### Prerequisites
 1. [Python 3](https://www.python.org/download/releases/3.0/)
