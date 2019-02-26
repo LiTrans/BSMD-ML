@@ -14,10 +14,10 @@ The `setup.py` file contain two function `send_transaction_and_print_status(tran
 
 In the `create_domain_and_asset()` function modify the parameters `domain_id`, `default_role` and `asset_name` to setup a domain, default role and asset. 
 ```python
-    commands = [
-        iroha.command('CreateDomain', domain_id='your_domain_name', default_role='your_defaul_role'),
-        iroha.command('CreateAsset', asset_name='your_asset_name', domain_id='your_domain_name', precision=number_of_decimals)
-    ]
+commands = [
+	iroha.command('CreateDomain', domain_id='your_domain_name', default_role='your_defaul_role'),
+	iroha.command('CreateAsset', asset_name='your_asset_name', domain_id='your_domain_name',precision=number_of_decimals)
+	]
 ```
 NOTE: `your_default_role` must be setting up first in the [genesis.block](/network/config/genesis.block) file. In this particular example we define the `user` role in the [genesis.block](/network/config/genesis.block) file as
 ```json
