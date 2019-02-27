@@ -1,7 +1,6 @@
 # Create a domain, asset and default role in the BSMD network
-```shell
-python3 setup.py
-```
+The first step for setting up the BSMD is to create domain, define an asset and define a default role. To do se just run the [Setup.py](Setup.py) file
+
 The `setup.py` file creates a domain call **federated**, an asset call **fedcoin** and a default role call **user**. Domains are use to grup a set of users with common goals. For example, in this case all nodes will use the BSMD for participating in a Federated Learning algorithm, hence all nodes must be in the domain **federated**. A node can be part of different domains. **Assets** are virtual coins the **users** use for payments.
 
 The `setup.py` file contain two function `send_transaction_and_print_status(transaction)` and `create_domain_and_asset()`. The first one is use for sending any transaction to the BSMD, while the second is use to configure the **domain**, default **role** and **assets**.
@@ -45,7 +44,15 @@ The `precision` parameter is the number of decimals accepted in the assets. All 
 
 Node have some functionalities to interact with other nodes which are are described next. When creatatin applications for the BSMD the first step is the creation of a node in the blockchain, this can be seen as when you sign-in a web page. After a node is created he can transfers assets to other nodes, set paramenters in his identity (set name, addres, etc), among others.
 
-This are the availabel functions in the BSMD:
+This function availabel in the BSMD are:
+  * [Create Node](#create-node)
+  * [Get balance](#get-balance)
+  * [Transfers assets](#transfers-assets)
+  * [Set details](#set-details)
+  * [Grant permission to set details](#grant-permission-to-set-details)
+  * [Get all details](#get-all-details)
+  * [Get all details from a generator](#get-all-details-from-a-generator)
+  * [Get a detail from a generator](#get-a-detail-from-a-generator)
 
 ## Create Node
 
