@@ -25,6 +25,12 @@ def trace(func):
 
 @trace
 def send_transaction_and_print_status(transaction):
+    """
+    Send a transaction to the Blockchain (BSMD)
+    :param transaction: Transaction we are sending to the BSMD
+    :param network: Address of the network we are sending the transaction
+    :return: null
+    """
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
     print('Transaction hash = {}, creator = {}'.format(
         hex_hash, transaction.payload.reduced_payload.creator_account_id))
@@ -33,9 +39,13 @@ def send_transaction_and_print_status(transaction):
         print(status)
 
 
-# Create a domain and and define asset
+
 @trace
 def create_domain_and_asset():
+    """
+    Create a domain, default user and define asset
+    :return: null
+    """
     commands = [
         iroha.command('CreateDomain', domain_id='federated', default_role='user'),
         iroha.command('CreateAsset', asset_name='fedcoin', domain_id='federated', precision=2)

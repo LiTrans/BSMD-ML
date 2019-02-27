@@ -23,9 +23,15 @@ def trace(func):
     return tracer
 
 
-# Send a transaction to the blockchain
+
 @trace
 def send_transaction_and_print_status(transaction, network):
+    """
+    Send a transaction to the Blockchain (BSMD)
+    :param transaction: Transaction we are sending to the BSMD
+    :param network: Address of the network we are sending the transaction
+    :return: null:
+    """
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
     print('Transaction hash = {}, creator = {}'.format(
         hex_hash, transaction.payload.reduced_payload.creator_account_id))
@@ -34,9 +40,26 @@ def send_transaction_and_print_status(transaction, network):
         print(status)
 
 
-# create a personal account
+
 @trace
-def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
+def create_account_user(name, public_key, domain_id, asset_qty, asset_id):
+    """
+    Create a personal account. This function works in three steps
+        1. Create an account with a name, in a domain and a public key
+        2. The admin create credit (assets) for the account (credit is created only if the user
+           buy it)
+        3. The admin transfer the credit to the user
+    :param name: (str) Name of the node we are creating
+    :param public_key: (str) public key of the node
+    :param domain_id: (str) Name of the domain the user wants to join
+    :param asset_qty: (float) Quantity of assets the node buy
+    :param asset_id: (name#domain) Name of asset the node buy
+    :return: null:
+
+    Usage example:
+    create_account_user('Tommy', 'key', 'federated', '5', fedcoin#federated)
+    """
+    # 1. Create account
     iroha = Iroha('admin@test')
     network = IrohaGrpc()
     tx = iroha.transaction(
@@ -47,14 +70,14 @@ def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 
-    # Create credit for the user
+    # 2. Create credit for the user
     tx = iroha.transaction([iroha.command('AddAssetQuantity',
                                           asset_id=asset_id,
-                                          amount=asste_qty)])
+                                          amount=asset_qty)])
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 
-    # Transfer credit to the user
+    # 3. Transfer credit to the user
     dest_account_id = name + '@' + domain_id
     tx = iroha.transaction([
         iroha.command('TransferAsset',
@@ -62,14 +85,30 @@ def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
                       dest_account_id=dest_account_id,
                       asset_id=asset_id,
                       description='initial credit',
-                      amount=asste_qty)])
+                      amount=asset_qty)])
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 
 
-# Get the balance of the account
 @trace
 def get_balance(iroha, network, account_id, private_key):
+    """
+    Get the balance of the account
+    :param iroha: (Iroha('name@domain')) Address for connecting to a domain
+    :param network: (IrohaGrpc('IP address')) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :return: data: (array) asset id and assets quantity
+
+    Usage example:
+    get_balance(Iroha('david@federated'), IrohaGrpc('127.0.0.1'), 'david@federated', 'key')
+
+    Return example:
+    [asset_id: "fedcoin#federated"
+    account_id: "generator@federated"
+    balance: "1000"
+    ]
+    """
     query = iroha.query('GetAccountAssets',
                         account_id=account_id)
     IrohaCrypto.sign_query(query, private_key)
@@ -81,9 +120,20 @@ def get_balance(iroha, network, account_id, private_key):
     return data
 
 
-# Granting access to write details in own identity.
 @trace
 def grants_access_to_set_details(iroha, network, my_id_account, private_key, grant_account_id):
+    """
+    Grant access to write details in own identity
+    :param iroha: (Iroha('name@domain')) Address for connecting to a domain
+    :param network: (IrohaGrpc('IP address')) Physical address of one node running the BSMD
+    :param my_id_account: (name@domain) Id of the user granting the access
+    :param private_key: (str) Private key of the user granting the access
+    :param grant_account_id: (name@domain) Id of the user we want to grant the access
+    :return: null:
+
+    Usage example:
+    grants_access_to_set_details(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated','key', 'juan@federated')
+    """
     tx = iroha.transaction([
         iroha.command('GrantPermission',
                       account_id=grant_account_id,
@@ -94,9 +144,21 @@ def grants_access_to_set_details(iroha, network, my_id_account, private_key, gra
     send_transaction_and_print_status(tx, network)
 
 
-# Set computed weight to a node.
 @trace
 def set_detail_to_node(iroha, network, account_id, private_key, detail_key, detail_value):
+    """
+    Set the details of a node. In federated learning the details could be the weight
+    :param iroha: (Iroha('name@domain')) Address for connecting to a domain
+    :param network: (IrohaGrpc('IP address')) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :param detail_key: (str) Name of the detail we want to set
+    :param detail_value: (str) Value of the detail
+    :return: null:
+
+    Usage example:
+    set_detail_to_node(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated', 'key', 'age', '33')
+    """
     tx = iroha.transaction([
         iroha.command('SetAccountDetail',
                       account_id=account_id,
@@ -107,9 +169,24 @@ def set_detail_to_node(iroha, network, account_id, private_key, detail_key, deta
     send_transaction_and_print_status(tx, network)
 
 
-# Transfer assets from one account to another
 @trace
-def transfer_coin(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description):
+def transfer_assets(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description):
+    """
+    Transfer assets from one account to another
+    :param iroha: (Iroha(name@domain)) Address for connecting to a domain
+    :param network: (IrohaGrpc(IP address)) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :param destination_account: (name@domain) Id of the destination account
+    :param asset_id: (name#domain) Id of the asset we want to transfer
+    :param quantity: (float) Number of assets we want to transfer
+    :param description: (str) Small message to the receiver of assets
+    :return: null:
+
+    Usage example:
+    transfer_assets(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated', 'key',
+                    'toro@federated', 'fedcoin#federated', '2', 'Shut up and take my money')
+    """
     tx = iroha.transaction([
         iroha.command('TransferAsset',
                       src_account_id=account_id,
@@ -121,9 +198,30 @@ def transfer_coin(iroha, network, account_id, private_key, destination_account, 
     IrohaCrypto.sign_transaction(tx, private_key)
     send_transaction_and_print_status(tx, network)
 
-# Consult a single detail from a node
+
 @trace
 def get_detail_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
+    """
+    Consult a single detail writen by some generator
+    :param iroha: (Iroha(name@domain)) Address for connecting to a domain
+    :param network: (IrohaGrpc(IP address)) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :param generator_id: (name@domain) Id of the user who create de detail
+    :param detail_id: (string) Name of the detail
+    :return: data: (json) solicited details of the user
+
+    Usage example:
+    get_detail_from_generator(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated', 'key',
+                                'david@federated', 'Address')
+
+    Return example:
+    {
+       "nodeA@domain":{
+             "Age":"35"
+        }
+    }
+    """
     query = iroha.query('GetAccountDetail',
                         account_id=account_id,
                         writer=generator_id,
@@ -136,9 +234,30 @@ def get_detail_from_generator(iroha, network, account_id, private_key, generator
     return data.detail
 
 
-# Consult all the details from a node
 @trace
-def get_all_details_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
+def get_all_details_from_generator(iroha, network, account_id, private_key, generator_id):
+    """
+    Consult all the details generated by some node
+    :param iroha: (Iroha(name@domain)) Address for connecting to a domain
+    :param network: (IrohaGrpc(IP address)) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :param generator_id: (name@domain) Id of the user who create de detail
+    :return: data: (json) solicited details of the user
+
+    Usage example:
+    get_detail_from_generator(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated', 'key',
+                              'david@federated')
+
+    Return example:
+    {
+       "nodeA@domain":{
+            "Age":"35",
+            "Name":"Quetzacolatl"
+        }
+    }
+    """
+
     query = iroha.query('GetAccountDetail',
                         account_id=account_id,
                         writer=generator_id)
@@ -150,9 +269,36 @@ def get_all_details_from_generator(iroha, network, account_id, private_key, gene
     return data.detail
 
 
-# Consult all details
+
 @trace
 def get_all_details(iroha, network, account_id, private_key):
+    """
+    Consult all details of the node
+    :param iroha: (Iroha(name@domain)) Address for connecting to a domain
+    :param network: (IrohaGrpc(IP address)) Physical address of one node running the BSMD
+    :param account_id: (name@domain) Id of the user in the domain
+    :param private_key: (str) Private key of the user
+    :return: data: (json) solicited details of the user
+
+    Usage example:
+    get_detail_from_generator(Iroha('david@federated'),IrohaGrpc('127.0.0.1'), 'david@federated', 'key')
+
+    Return example:
+    {
+        "nodeA@domain":{
+            "Age":"35",
+            "Name":"Quetzacoatl"
+        },
+        "nodeB@domain":{
+            "Location":"35.3333535,-45.2141556464",
+            "Status":"valid"
+        },
+        "nodeA@domainB":{
+            "FederatingParam":"35.242553",
+            "Loop":"3"
+        }
+    }
+    """
     query = iroha.query('GetAccountDetail',
                         account_id=account_id)
     IrohaCrypto.sign_query(query, private_key)
