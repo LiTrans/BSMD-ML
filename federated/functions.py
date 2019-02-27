@@ -126,21 +126,21 @@ def transfer_coin(iroha, network, account_id, private_key, destination_account, 
 # This function is use when a node wants to consult the weight of other participants
 # Returns solicited information
 @trace
-def get_details_from(iroha, network, account_id, private_key, generator, detail_id):
+def get_details_from(iroha, network, account_id, private_key, generator_id, detail_id):
     """
     Get asset info for coin#domain
     :return:
     """
     query = iroha.query('GetAccountDetail',
                         account_id=account_id,
-                        writer=generator,
+                        writer=generator_id,
                         key=detail_id)
     IrohaCrypto.sign_query(query, private_key)
 
     response = network.send_query(query)
     # print(response)
     data = response.account_detail_response
-    print('Account id = {}, details = {}'.format('generator@federating', data.detail))
+    print('Account id = {}, details = {}'.format(account_id, data.detail))
     return data.detail
 
 
