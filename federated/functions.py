@@ -111,14 +111,14 @@ def set_detail_to_node(iroha, network, account_id, private_key, detail_id, value
 
 # Transfer assets from one account to another
 @trace
-def transfer_coin(iroha, network, account_id, private_key, destination_account, asset_id, amount, description):
+def transfer_coin(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description):
     tx = iroha.transaction([
         iroha.command('TransferAsset',
                       src_account_id=account_id,
                       dest_account_id=destination_account,
                       asset_id=asset_id,
                       description=description,
-                      amount=amount)
+                      amount=quantity)
     ])
     IrohaCrypto.sign_transaction(tx, private_key)
     send_transaction_and_print_status(tx, network)
