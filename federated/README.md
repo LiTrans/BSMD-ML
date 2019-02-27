@@ -92,7 +92,7 @@ Only the owner and the **admin** can query the owners assets. The parameters are
 ## Transfers assets 
 Assets can be transferred to other account in exchange for a service. Only the owner can transfer his assets. In the BSMD-ML nodes will pay other nodes to compute federated parameters. To transfer assets use:
 ```python
-transfer_coin(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description)
+transfer_assets(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description)
 ```
 The parameters are:
 - `iroha`: Address for connecting to a domain in the BSMD. The address have the following form `Iroha(name@domain)`. In this example the address is `Iroha(generator@federated)` 
