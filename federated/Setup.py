@@ -45,8 +45,8 @@ def create_domain_and_asset():
     Creates domain 'domain' and asset 'parameter#domain' with precision 2
     """
     commands = [
-        iroha.command('CreateDomain', domain_id='federating', default_role='user'),
-        iroha.command('CreateAsset', asset_name='fedcoin', domain_id='federating', precision=2)
+        iroha.command('CreateDomain', domain_id='federated', default_role='user'),
+        iroha.command('CreateAsset', asset_name='fedcoin', domain_id='federated', precision=2)
     ]
     tx = IrohaCrypto.sign_transaction(
         iroha.transaction(commands), admin_private_key)
