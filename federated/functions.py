@@ -35,7 +35,7 @@ def send_transaction_and_print_status(transaction, network):
 
 # Use the function to create a personal account. The account is created with the credit the user has
 @trace
-def create_account_user(name, public_key, domain_id, credit, asset_id):
+def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
     iroha = Iroha('admin@test')
     network = IrohaGrpc()
     tx = iroha.transaction(
@@ -49,7 +49,7 @@ def create_account_user(name, public_key, domain_id, credit, asset_id):
     # Create credit for the user
     tx = iroha.transaction([iroha.command('AddAssetQuantity',
                                           asset_id=asset_id,
-                                          amount=credit)])
+                                          amount=asste_qty)])
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 
@@ -61,7 +61,7 @@ def create_account_user(name, public_key, domain_id, credit, asset_id):
                       dest_account_id=dest_account_id,
                       asset_id=asset_id,
                       description='initial credit',
-                      amount=credit)])
+                      amount=asste_qty)])
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 

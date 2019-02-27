@@ -14,10 +14,11 @@ name = 'generator'
 domain_id = 'federated'
 account_id = name + '@' + domain_id
 iroha = Iroha('generator@federated')
+asset_id = 'fedcoin#federated'
 network = IrohaGrpc()
 
 
-functions.create_account_user(name,user_public_key,domain_id,'1000','fedcoin#federated')
+functions.create_account_user(name,user_public_key,domain_id,'1000',asset_id)
 
 data = functions.get_balance(iroha,network,account_id,user_private_key)
 
