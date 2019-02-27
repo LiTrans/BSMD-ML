@@ -98,12 +98,12 @@ def grants_access_to_set_details(iroha, network, account_id, private_key):
 
 # Set computed weight to a node.
 @trace
-def set_detail_to_node(iroha, network, account_id, private_key, detail_id, value):
+def set_detail_to_node(iroha, network, account_id, private_key, detail_key, detail_value):
     tx = iroha.transaction([
         iroha.command('SetAccountDetail',
                       account_id=account_id,
-                      key=detail_id,
-                      value=value)
+                      key=detail_key,
+                      value=detail_value)
     ])
     IrohaCrypto.sign_transaction(tx, private_key)
     send_transaction_and_print_status(tx, network)
