@@ -13,10 +13,6 @@ net = IrohaGrpc()
 
 
 def trace(func):
-    """
-    A decorator for tracing methods' begin/end execution points
-    """
-
     def tracer(*args, **kwargs):
         name = func.__name__
         print('\tEntering "{}"'.format(name))
@@ -37,13 +33,9 @@ def send_transaction_and_print_status(transaction):
         print(status)
 
 
-
-# Create a domain and an asset. The assets are the parameter we use for machine learning
+# Create a domain and and define asset
 @trace
 def create_domain_and_asset():
-    """
-    Creates domain 'domain' and asset 'parameter#domain' with precision 2
-    """
     commands = [
         iroha.command('CreateDomain', domain_id='federated', default_role='user'),
         iroha.command('CreateAsset', asset_name='fedcoin', domain_id='federated', precision=2)
@@ -52,6 +44,6 @@ def create_domain_and_asset():
         iroha.transaction(commands), admin_private_key)
     send_transaction_and_print_status(tx)
 
-create_domain_and_asset()
 
+create_domain_and_asset()
 print('done')

@@ -18,14 +18,20 @@ asset_id = 'fedcoin#federated'
 network = IrohaGrpc()
 
 
-functions.create_account_user(name,user_public_key,domain_id,'1000',asset_id)
+# functions.create_account_user(name,user_public_key,domain_id,'1000',asset_id)
 
-data = functions.get_balance(iroha,network,account_id,user_private_key)
+# data = functions.get_balance(iroha,network,account_id,user_private_key)
+#
+# functions.set_detail_to_node(iroha,network,account_id,user_private_key,'Age','35')
+# functions.set_detail_to_node(iroha,network,account_id,user_private_key,'Name','Quetzacolatl')
 
-
+detail = functions.get_detail_from_generator(iroha,network,account_id,user_private_key,account_id,'Age')
+details = functions.get_all_details(iroha,network,account_id,user_private_key)
 
 # functions.set_detail_to_node()
 print('Resultados')
-print(data)
+print(detail)
+
+print(details)
 
 

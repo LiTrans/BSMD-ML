@@ -7,8 +7,8 @@ import sys
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
 
-
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
+
 
 def trace(func):
     """
@@ -22,7 +22,8 @@ def trace(func):
         return result
     return tracer
 
-# This function send a transaction to the blockchain
+
+# Send a transaction to the blockchain
 @trace
 def send_transaction_and_print_status(transaction, network):
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
@@ -33,7 +34,7 @@ def send_transaction_and_print_status(transaction, network):
         print(status)
 
 
-# Use the function to create a personal account. The account is created with the credit the user has
+# create a personal account
 @trace
 def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
     iroha = Iroha('admin@test')
@@ -65,12 +66,10 @@ def create_account_user(name, public_key, domain_id, asste_qty, asset_id):
     IrohaCrypto.sign_transaction(tx, admin_private_key)
     send_transaction_and_print_status(tx, network)
 
+
 # Get the balance of the account
 @trace
 def get_balance(iroha, network, account_id, private_key):
-    """
-    List all the assets of userone@domain
-    """
     query = iroha.query('GetAccountAssets',
                         account_id=account_id)
     IrohaCrypto.sign_query(query, private_key)
@@ -81,9 +80,8 @@ def get_balance(iroha, network, account_id, private_key):
         print('Asset id = {}, balance = {}'.format(asset.asset_id, asset.balance))
     return data
 
-# granting access to write federating weights in own identity.
-# This function is use after the node compute a weight. The node that compute the paramenter writ down
-# the weight in the details of the collector
+
+# Granting access to write details in own identity.
 @trace
 def grants_access_to_set_details(iroha, network, my_id_account, private_key, grant_account_id):
     tx = iroha.transaction([
@@ -123,14 +121,9 @@ def transfer_coin(iroha, network, account_id, private_key, destination_account, 
     IrohaCrypto.sign_transaction(tx, private_key)
     send_transaction_and_print_status(tx, network)
 
-# This function is use when a node wants to consult the weight of other participants
-# Returns solicited information
+# Consult a single detail from a node
 @trace
-def get_details_from(iroha, network, account_id, private_key, generator_id, detail_id):
-    """
-    Get asset info for coin#domain
-    :return:
-    """
+def get_detail_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
     query = iroha.query('GetAccountDetail',
                         account_id=account_id,
                         writer=generator_id,
@@ -138,7 +131,33 @@ def get_details_from(iroha, network, account_id, private_key, generator_id, deta
     IrohaCrypto.sign_query(query, private_key)
 
     response = network.send_query(query)
-    # print(response)
+    data = response.account_detail_response
+    print('Account id = {}, details = {}'.format(account_id, data.detail))
+    return data.detail
+
+
+# Consult all the details from a node
+@trace
+def get_all_details_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
+    query = iroha.query('GetAccountDetail',
+                        account_id=account_id,
+                        writer=generator_id)
+    IrohaCrypto.sign_query(query, private_key)
+
+    response = network.send_query(query)
+    data = response.account_detail_response
+    print('Account id = {}, details = {}'.format(account_id, data.detail))
+    return data.detail
+
+
+# Consult all details
+@trace
+def get_all_details(iroha, network, account_id, private_key):
+    query = iroha.query('GetAccountDetail',
+                        account_id=account_id)
+    IrohaCrypto.sign_query(query, private_key)
+
+    response = network.send_query(query)
     data = response.account_detail_response
     print('Account id = {}, details = {}'.format(account_id, data.detail))
     return data.detail
