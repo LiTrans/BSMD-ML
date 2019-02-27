@@ -67,7 +67,7 @@ The parameters are:
 - `user_public_key`: (string) public key of the node. The key is obtained with the function `IrohaCrypto.derive_public_key(user_private_key)`. **NOTE**: for this example the `user_private_key = b11224fedce8e8deebf4c03339f16790681f35ca09ccdc9785a7217394065af5`, but in production environments the private key must be obtained with the function`IrohaCrypto.private_key()`
 - `domain`: (string) Name of the domain the user wants to join. The domain must correspond to a domain created in the [Setup.py](Setup.py). In this example the domain name is **federated**
 - `asset_qty`: (float) Quantity of assets the node buy. Nodes can be created with a initial number of assets, for instance if a node wants to participate in the Blockchain he can add some money to his account to make transactions. 
-- `asset_id`: (string) Id of the asset we want to query. The id have the following form `asset_name#domain`, in this example the id is `fedcoin#federated`
+- `asset_id`: (string) Name of asset the node buy. The id have the following form `asset_name#domain`, in this example the id is `fedcoin#federated`
 
 
 ## Get balance 
