@@ -85,13 +85,13 @@ def get_balance(iroha, network, account_id, private_key):
 # This function is use after the node compute a weight. The node that compute the paramenter writ down
 # the weight in the details of the collector
 @trace
-def grants_access_to_set_details(iroha, network, account_id, private_key):
+def grants_access_to_set_details(iroha, network, my_id_account, private_key, grant_account_id):
     tx = iroha.transaction([
         iroha.command('GrantPermission',
-                      account_id=account_id,
+                      account_id=grant_account_id,
                       permission=can_set_my_account_detail)
     ],
-        creator_account='collector@federating')
+        creator_account=my_id_account)
     IrohaCrypto.sign_transaction(tx, private_key)
     send_transaction_and_print_status(tx, network)
 
