@@ -1,10 +1,10 @@
-### Prerequisites
+# Prerequisites
 
 - Install Iroha python sdk
 ```shell
 pip install iroha
 ```
-### Create a domain, asset and default role in the BSMD network
+# Create a domain, asset and default role in the BSMD network
 ```shell
 python3 setup.py
 ```
@@ -44,7 +44,7 @@ NOTE: `your_default_role` must be setting up first in the [genesis.block](/netwo
 		]
 	}
 ```
-### Create a node
+# Create a node
 ```shell
 python3 node.py
 ```
@@ -57,9 +57,11 @@ To create nodes run the function `functions.create_account_user(name,user_public
 - `asset_qty`: (float) Initial assets of the node. Nodes can be created with a initial number of assets, for instance if a node wants to participate in the blockchain he can add some money to his account to make transactions. 
 - `asset_id`: (string) Id of the asset we want to query. The id have the following form `asset_name#domain`, in this example the id is `fedcoin#federated`
 
-This node have some functionaties that are desribed next:
+## Functions
 
-# Get balance 
+Node have some functionaties to interact with other nodes which are are desribed next:
+
+### Get balance 
 To know the balance of the node account use:
 ```python
 functions.get_balance(iroha,network,account_id,user_private_key)
@@ -77,7 +79,7 @@ Only the owner and the **admin** can query the owners assets. The parameters are
 -`account_id`: (string) Id of the user in the domain. The account_id have the following form `name@domain`. In this example the account_id is `generator@federated`
 -`user_private_key`: (string) Private key of the user
 
-# Transfers assets 
+### Transfers assets 
 Assets can be tranfered to other account in exchange for a service. In the BSMD-ML nodes will pay other nodes to compute federated parameters
 ```python
 transfer_coin(iroha, network, account_id, private_key, destination_account, asset_id, quantity, description)
