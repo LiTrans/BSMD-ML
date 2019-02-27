@@ -70,7 +70,7 @@ To know the balance of the node account use:
 get_balance(iroha,network,account_id,user_private_key)
 ```
 This function returns an array with the assets quantity of the node account. Example:
-```
+```python
 [asset_id: "fedcoin#federated"
 account_id: "generator@federated"
 balance: "1000"
@@ -131,14 +131,73 @@ The parameters are:
 - `private_key`: (string) Private key of the user who is signing the transactions.
 - `grant_account_id`: (account_id) Id of the user to which we are granting the permission. The account_id have the following form `name@domain`
 
-### Get details
-To know the details of the node account use:
+### Get all details
+To know all the details of the node use:
 ```python
-get_details_from(iroha, network, account_id, private_key, generator, detail_id)
+get_all_details(iroha, network, account_id, private_key
 ```
+This function returns a `json` with the details written by all the generators of information. The json contains the id of the node who generate the information and the information generated:
+```json
+{
+   "nodeA@domain":{
+      "Age":"35",
+      "Name":"Quetzacolatl"
+   },
+   "nodeB@domain":{
+      "Location":"35.3333535,-45.2141556464",
+      "Status":"valid"
+   },
+   "nodeA@domainB":{
+      "FederatingParam":"35.242553",
+      "Loop":"3"
+   }
+}
+```
+The parameters are:
 - `iroha`: Address for connecting to a domain in the BSMD. The address have the following form `Iroha(name@domain)`. In this example the address is `Iroha(generator@federated)` 
 - `network`: Physical address of one node running the BSMD. The address have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the address is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the BSMD runs in our local machine
 - `account_id`: (account_id) Id of the user. The account_id have the following form `name@domain`
-- `private_key`: (string) Private key of the user who is signing the transactions.
-- `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail.
+- `private_key`: (string) Private key of the user who is signing the transactions
+
+### Get all details from a generator
+To know all the details writen by a generator use:
+```python
+get_all_details_from_generator(iroha, network, account_id, private_key, generator_id):
+```
+This function returns a `json` with the details written by one genertor. The json contains the id of the node who generate the information and the information generated:
+```json
+{
+   "nodeA@domain":{
+      "Age":"35",
+      "Name":"Quetzacolatl"
+   }
+}
+```
+The parameters are:
+- `iroha`: Address for connecting to a domain in the BSMD. The address have the following form `Iroha(name@domain)`. In this example the address is `Iroha(generator@federated)` 
+- `network`: Physical address of one node running the BSMD. The address have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the address is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the BSMD runs in our local machine
+- `account_id`: (account_id) Id of the user. The account_id have the following form `name@domain`
+- `private_key`: (string) Private key of the user who is signing the transactions
+- `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail
+
+### Get a detail from a generator
+To know one details writen by a generator use:
+```python
+get_detail_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
+```
+This function returns a `json` with one detail written by one genertor. The json contains the id of the node who generate the information and the information generated:
+```json
+{
+   "nodeA@domain":{
+      "Age":"35"
+   }
+}
+```
+The parameters are:
+- `iroha`: Address for connecting to a domain in the BSMD. The address have the following form `Iroha(name@domain)`. In this example the address is `Iroha(generator@federated)` 
+- `network`: Physical address of one node running the BSMD. The address have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the address is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the BSMD runs in our local machine
+- `account_id`: (account_id) Id of the user. The account_id have the following form `name@domain`
+- `private_key`: (string) Private key of the user who is signing the transactions
+- `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail
 - `detail_id`: (string) Name of the detail we want to query
+
