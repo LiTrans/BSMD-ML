@@ -205,5 +205,5 @@ The parameters are:
 - `network`: Physical address of one node running the BSMD. The address have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the address is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the BSMD runs in our local machine
 - `account_id`: (account_id) Id of the user. The account_id have the following form `name@domain`
 - `private_key`: (string) Private key of the user who is signing the transactions
-- `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail
+- `generator_id`: (account_id) Id of the user who create the detail. This id can be the same as the owner or can be the node who create the detail
 - `detail_id`: (string) Name of the detail we want to query
