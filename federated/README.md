@@ -85,9 +85,9 @@ transfer_coin(iroha, network, account_id, private_key, destination_account, asse
 Only the owner can tranfer his assets. The parameters are:
 - `iroha`: Addres for connecting to a domain in the BSMD. The addres have the following form `Iroha(name@domain)`. In this example the addres is `Iroha(generator@federated)` 
 - `network`: Phisical addres of one node runng the blockchain. The addres have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the addres is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the blockchain runs in our local machine
--`account_id`: (string) Id of the account owner. The account_id have the following form `name@domain`
--`private_key`: (string) Private key of the user who sign the transaction
--`destination_account`: (acount_id) Id of the desitination account. Example `dest_account@domain`
--`asset_id`: (asset_id) Id of the asset. Example `asset_name#domain`
--`quantity`: (float) Quantity of asset to be transfered
+- `account_id`: (string) Id of the account owner. The account_id have the following form `name@domain`
+- `private_key`: (string) Private key of the user who sign the transaction
+- `destination_account`: (acount_id) Id of the desitination account. Example `dest_account@domain`
+- `asset_id`: (asset_id) Id of the asset. Example `asset_name#domain`
+- `quantity`: (float) Quantity of asset to be transfered
 - `description`(string) Descrition of the transaction. Example 'payment for computing paramenters'
