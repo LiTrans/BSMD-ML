@@ -86,8 +86,8 @@ balance: "1000"
 Only the owner and the **admin** can query the owners assets. The parameters are:
 - `iroha`: Address for connecting to a domain in the BSMD. The address have the following form `Iroha(name@domain)`. In this example the address is `Iroha(generator@federated)` 
 - `network`: Physical address of one node running the BSMD. The address have the following form `IrohaGrpc(IP_of_the_node)`.  In this example the address is `IrohaGrpc()` (or `IrohaGrpc(127.0.0.1)`) since the BSMD runs in our local machine
--`account_id`: (string) Id of the user in the domain. The account_id have the following form `name@domain`. In this example the account_id is `generator@federated`
--`user_private_key`: (string) Private key of the user
+- `account_id`: (string) Id of the user in the domain. The account_id have the following form `name@domain`. In this example the account_id is `generator@federated`
+- `user_private_key`: (string) Private key of the user
 
 ## Transfers assets 
 Assets can be transferred to other account in exchange for a service. Only the owner can transfer his assets. In the BSMD-ML nodes will pay other nodes to compute federated parameters. To transfer assets use:
