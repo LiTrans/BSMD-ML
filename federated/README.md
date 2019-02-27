@@ -1,5 +1,5 @@
 # Create a domain, asset and default role in the BSMD network
-The first step for setting up the BSMD is to create domain, define an asset and define a default role. To do se just run the [Setup.py](Setup.py) file
+The first step for setting up the BSMD is to create domain, define an asset and define a default role. To do so just run the [Setup.py](Setup.py) file.
 
 The `setup.py` file creates a domain call **federated**, an asset call **fedcoin** and a default role call **user**. Domains are use to grup a set of users with common goals. For example, in this case all nodes will use the BSMD for participating in a Federated Learning algorithm, hence all nodes must be in the domain **federated**. A node can be part of different domains. **Assets** are virtual coins the **users** use for payments.
 
@@ -42,9 +42,11 @@ The `precision` parameter is the number of decimals accepted in the assets. All 
 ```
 # Functions
 
-Node have some functionalities to interact with other nodes which are are described next. When creatatin applications for the BSMD the first step is the creation of a node in the blockchain, this can be seen as when you sign-in a web page. After a node is created he can transfers assets to other nodes, set paramenters in his identity (set name, addres, etc), among others.
+Node have some functionalities to interact with other nodes which are are described next. The first step for developing applications in the BSMD is the [creation of a node](#create-node) in the blockchain. The creation of a node is similar to the process of sign-in a web page. 
 
-This function availabel in the BSMD are:
+After a node is created he can transfers assets to other nodes, set parameters in his identity (set name, adders, etc), among others.
+
+This function available in the BSMD are:
   * [Create Node](#create-node)
   * [Get balance](#get-balance)
   * [Transfers assets](#transfers-assets)
@@ -56,22 +58,20 @@ This function availabel in the BSMD are:
 
 ## Create Node
 
-```shell
-python3 node.py
-```
-The `node.py` file creates a node call **generator** with role **user** in the domain **federated** and a credit of 1000 **fedcoins**. 
-
-To create nodes run the function `functions.create_account_user(name,user_public_key,domain,asset_qty,asset_id)` with the following parameters:
+To create nodes run the function 
+```python
+functions.create_account_user(name,user_public_key,domain,asset_qty,asset_id)
+``` 
+The parameters are:
 - `name`: (string) Name of the node, each name in the BSMD need to be unique
-- `user_public_key`: (string) public key of the node. The key is obtained with the function `IrohaCrypto.derive_public_key(user_private_key)`. NOTE: for this example the `user_private_key = b11224fedce8e8deebf4c03339f16790681f35ca09ccdc9785a7217394065af5`, but in production environments the private key must be obtained with the function`IrohaCrypto.private_key()`
+- `user_public_key`: (string) public key of the node. The key is obtained with the function `IrohaCrypto.derive_public_key(user_private_key)`. **NOTE**: for this example the `user_private_key = b11224fedce8e8deebf4c03339f16790681f35ca09ccdc9785a7217394065af5`, but in production environments the private key must be obtained with the function`IrohaCrypto.private_key()`
 - `domain`: (string) Name of the domain where the node is created. The domain must correspond to a domain created in the [Setup.py](Setup.py). In this example the domain name is **federated**
 - `asset_qty`: (float) Initial assets of the node. Nodes can be created with a initial number of assets, for instance if a node wants to participate in the Blockchain he can add some money to his account to make transactions. 
 - `asset_id`: (string) Id of the asset we want to query. The id have the following form `asset_name#domain`, in this example the id is `fedcoin#federated`
 
 
-
-
 ## Get balance 
+
 To know the balance of the node account use:
 ```python
 get_balance(iroha,network,account_id,user_private_key)
