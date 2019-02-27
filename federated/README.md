@@ -160,11 +160,11 @@ The parameters are:
 - `private_key`: (string) Private key of the user who is signing the transactions
 
 ### Get all details from a generator
-To know all the details writen by a generator use:
+To know all the details written by a generator use:
 ```python
 get_all_details_from_generator(iroha, network, account_id, private_key, generator_id):
 ```
-This function returns a `json` with the details written by one genertor. The json contains the id of the node who generate the information and the information generated:
+This function returns a `json` with the details written by one generator. The json contains the id of the node who generate the information and the information generated:
 ```json
 {
    "nodeA@domain":{
@@ -181,11 +181,11 @@ The parameters are:
 - `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail
 
 ### Get a detail from a generator
-To know one details writen by a generator use:
+To know one detail written by a generator use:
 ```python
 get_detail_from_generator(iroha, network, account_id, private_key, generator_id, detail_id):
 ```
-This function returns a `json` with one detail written by one genertor. The json contains the id of the node who generate the information and the information generated:
+This function returns a `json` with one detail written by one generator. The json contains the id of the node who generate the information and the information generated:
 ```json
 {
    "nodeA@domain":{
@@ -200,4 +200,3 @@ The parameters are:
 - `private_key`: (string) Private key of the user who is signing the transactions
 - `generator_id`: (account_id) Private key of the user who create the detail. This account_id can be the same as the owner or can be the node who create the detail
 - `detail_id`: (string) Name of the detail we want to query
-
