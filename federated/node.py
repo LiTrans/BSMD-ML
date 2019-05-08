@@ -2,7 +2,7 @@
 from iroha import Iroha, IrohaGrpc
 from iroha import IrohaCrypto
 import sys
-import functions
+import iroha_functions
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
 
@@ -25,8 +25,8 @@ network = IrohaGrpc()
 # functions.set_detail_to_node(iroha,network,account_id,user_private_key,'Age','35')
 # functions.set_detail_to_node(iroha,network,account_id,user_private_key,'Name','Quetzacolatl')
 
-detail = functions.get_detail_from_generator(iroha,network,account_id,user_private_key,account_id,'Age')
-details = functions.get_all_details(iroha,network,account_id,user_private_key)
+detail = iroha_functions.get_detail_from_generator(iroha, network, account_id, user_private_key, account_id, 'Age')
+details = iroha_functions.get_all_details(iroha, network, account_id, user_private_key)
 
 # functions.set_detail_to_node()
 print('Resultados')
