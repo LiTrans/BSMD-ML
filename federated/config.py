@@ -18,9 +18,10 @@ SSL_CONF.cert_path = 'server.pem'
 
 
 
-#BSMD configuration
+# BSMD configuration
 ######################
 asset_id = 'fedcoin#federated'
+# Replace localhost with an IP address of a node running the blockchain
 network = IrohaGrpc('localhost:50051')
 domain_id = 'federated'
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
