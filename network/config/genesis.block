@@ -9,8 +9,32 @@
                        {
                           "addPeer":{
                              "peer":{
-                                "address":"127.0.0.1:10001",
+                                "address":"99.230.31.239:10001",
                                 "peerKey":"bddd58404d1315e0eb27902c5d7c8eb0602c16238f005773df406bc191308929"
+                             }
+                          }
+                       },
+                       {
+                          "addPeer":{
+                             "peer":{
+                                "address":"18.191.129.109:10001",
+                                "peerKey":"e5e9011344b332b8ca17d7490014410c2c6ad5921bed4add7a055ab09c5373be"
+                             }
+                          }
+                       },
+		       {
+                          "addPeer":{
+                             "peer":{
+                                "address":"78.135.22.788:10001",
+                                "peerKey":"a1dd3d0620382ae7ff693024f5f542d22188f60d15e09c8ab37ed13b9ac6fd66"
+                             }
+                          }
+                       },
+		       {
+                          "addPeer":{
+                             "peer":{
+                                "address":"24.234.223.632:10001",
+                                "peerKey":"8099888e976e5da3bba75524e633e551e514b9e4d9d959af9fb468313625cef6"
                              }
                           }
                        },
