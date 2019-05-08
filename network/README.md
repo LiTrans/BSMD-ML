@@ -97,3 +97,11 @@ will correspond to node0. Inspect the file [node0.pub](node0.pub) and see that `
 ```
 irohad --config config/config.sample --genesis_block config/genesis.block --keypair_name config/node0
 ```
+
+## Aditional Commands
+If you like to clean and start fresh
+```
+irohad --config config/config.sample --genesis_block config/genesis.block --keypair_name config/node0 --overwrite_ledger
+```
+
+
