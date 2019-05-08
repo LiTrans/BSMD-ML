@@ -229,21 +229,54 @@ class _FederatedHook(tf.train.SessionRunHook):
 
 
     @staticmethod
-    def _send_np_array(arrays_to_send, connection_socket, name):
+    # def _send_np_array(arrays_to_send, connection_socket, name, epoch_total, iteration, accuracy, loss):
+    def _send_np_array(arrays_to_send, connection_socket, name, iteration, tot_workers):
+
         """Routine to send a list of numpy arrays. It sends it as many time as necessary
             Args:
               connection_socket (socket): a socket with a connection already
                   established.
          """
         serialized = pickle.dumps(arrays_to_send)
-
         print('name: ', name)
+        transaction_data = dict()
+        transaction_data['Process'] = 'BSMD-ML'
+        transaction_data['Received from'] = name
+        # in this example weights are send using a socket, but you can write the address
+        # were the weight is stored (e.g., see https://ipfs.io/)
+        transaction_data['address'] = 'address'
+        transaction_data['Total workers'] = str(tot_workers)
+        transaction_data['iteration'] = str(iteration)
+        transaction_json = json.dumps(transaction_data)
+        json_in_ledger = str(transaction_json)
+        transaction = json_in_ledger.replace('"', '')
+
+        worker_names = [config.worker1_account_id, config.worker2_account_id, config.worker3_account_id,
+                        config.worker4_account_id]
 
         if name == 'chief':
-            # data_in_ledger = {}
-            # data_in_ledger[]
-            iroha_functions.set_detail_to_node(config.iroha_chief, config.network, config.worker1_account_id,
-                                           config.chief_private_key, 'chief', '33')
+            for worker in range(tot_workers - 1):
+                # iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
+                #                                    config.chief_private_key, 'chief-weight', transaction)
+                print(worker_names[worker])
+                print(transaction)
+        else:
+            if name == 'worker1':
+                # iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
+                #                                    config.worker1_private_key, str(name) + '-weight', transaction)
+                print(transaction)
+            if name == 'worker2':
+                # iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
+                #                                    config.worker2_private_key, str(name) + '-weight', transaction)
+                print(transaction)
+            if name == 'worker3':
+                iroha_functions.set_detail_to_node(config.iroha_worker3, config.network, config.chief_account_id,
+                                                   config.worker3_private_key, str(name) + '-weight', transaction)
+                print(transaction)
+            if name == 'worker4':
+                iroha_functions.set_detail_to_node(config.iroha_worker4, config.network, config.chief_account_id,
+                                                   config.worker4_private_key, str(name) + '-weight', transaction)
+                print(transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
@@ -326,7 +359,8 @@ class _FederatedHook(tf.train.SessionRunHook):
                     break
                 try:
                     print('SENDING Worker: ' + address[0] + ':' + str(address[1]))
-                    self._send_np_array(session.run(tf.trainable_variables()), connection_socket, self._worker_name)
+                    self._send_np_array(session.run(tf.trainable_variables()), connection_socket, self._worker_name, 0,
+                                        len(users) + 1)
                     # print('sending variables: ' + tf.trainable_variables())
                     print('SENT Worker {}'.format(len(users)))
                     users.append(connection_socket)
@@ -420,9 +454,9 @@ class _FederatedHook(tf.train.SessionRunHook):
                       + 'with {} workers, iter: {}'.format(self.num_workers, step_value))
                 rearranged_weights = []
 
-                #In gathered_weights, each list represents the weights of each worker.
-                #We want to gahter in each list the weights of a single layer so
-                #to average them afterwards
+                # In gathered_weights, each list represents the weights of each worker.
+                # We want to gather in each list the weights of a single layer so
+                # to average them afterwards
                 for i in range(len(gathered_weights[0])):
                     rearranged_weights.append([elem[i] for elem in gathered_weights])
                 for i, elem in enumerate(rearranged_weights):
@@ -430,7 +464,7 @@ class _FederatedHook(tf.train.SessionRunHook):
 
                 for i, user in enumerate(users):
                     try:
-                        self._send_np_array(rearranged_weights, user, self._worker_name)
+                        self._send_np_array(rearranged_weights, user, self._worker_name, step_value, self.num_workers)
                         user.close()
                     except (ConnectionResetError, BrokenPipeError):
                         print('Fallen Worker: ' + addresses[i][0] + ':' + str(address[i][1]))
@@ -449,14 +483,13 @@ class _FederatedHook(tf.train.SessionRunHook):
                 worker_socket = self._start_socket_worker()
                 print('Sending weights')
                 value = session.run(tf.trainable_variables())
-                self._send_np_array(value, worker_socket, self._worker_name)
-
+                self._send_np_array(value, worker_socket, self._worker_name, step_value, self.num_workers)
                 broadcasted_weights = self._get_np_array(worker_socket)
                 feed_dict = {}
                 for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
                     feed_dict[placeh] = brweigh
                 session.run(self._update_local_vars_op, feed_dict=feed_dict)
-                print('Weights succesfully updated, iter: {}'.format(step_value))
+                print('Weights successfully updated, iter: {}'.format(step_value))
                 worker_socket.close()
 
     def end(self, session):
