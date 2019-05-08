@@ -42,25 +42,25 @@ python3 Setup.py
 
 On the chief computer run
 ```shell
-python3 federated_classifier.py.py --is_chief=True --worker_name=chief
+python3 federated_classifier.py --is_chief=True --worker_name=chief
 ```
 
 On the first worker computer run
 ```shell
-python3 federated_classifier.py.py --is_chief=False --worker_name=worker1
+python3 federated_classifier.py --is_chief=False --worker_name=worker1
 ```
 On the second worker computer run
 ```shell
-python3 federated_classifier.py.py --is_chief=False --worker_name=worker2
+python3 federated_classifier.py --is_chief=False --worker_name=worker2
 ```
 
 On the third worker computer run
 ```shell
-python3 federated_classifier.py.py --is_chief=False --worker_name=worker3
+python3 federated_classifier.py --is_chief=False --worker_name=worker3
 ```
 
 On the fourth worker computer run
 ```shell
-python3 federated_classifier.py.py --is_chief=False --worker_name=worker4
+python3 federated_classifier.py --is_chief=False --worker_name=worker4
 ```
 
