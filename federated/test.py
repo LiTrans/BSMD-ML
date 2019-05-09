@@ -15,6 +15,6 @@ j = json_in_ledger.replace('"','')
 print(json_in_ledger.replace('"',''))
 
 iroha_functions.set_detail_to_node(config.iroha_chief, config.network, config.worker1_account_id,
-                                   config.chief_private_key, 'chiefefd', j)
+                                   config.chief_private_key, 'chief_efd', j)
 
 # iroha_functions.get_block(122)

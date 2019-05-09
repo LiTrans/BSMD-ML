@@ -256,26 +256,26 @@ class _FederatedHook(tf.train.SessionRunHook):
 
         if name == 'chief':
             for worker in range(tot_workers - 1):
-                # iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
-                #                                    config.chief_private_key, 'chief-weight', transaction)
+                iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
+                                                   config.chief_private_key, 'chief_weight', transaction)
                 print(worker_names[worker])
                 print(transaction)
         else:
             if name == 'worker1':
-                # iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
-                #                                    config.worker1_private_key, str(name) + '-weight', transaction)
+                iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
+                                                   config.worker1_private_key, str(name) + '_weight', transaction)
                 print(transaction)
             if name == 'worker2':
-                # iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
-                #                                    config.worker2_private_key, str(name) + '-weight', transaction)
+                iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
+                                                   config.worker2_private_key, str(name) + '_weight', transaction)
                 print(transaction)
             if name == 'worker3':
                 iroha_functions.set_detail_to_node(config.iroha_worker3, config.network, config.chief_account_id,
-                                                   config.worker3_private_key, str(name) + '-weight', transaction)
+                                                   config.worker3_private_key, str(name) + '_weight', transaction)
                 print(transaction)
             if name == 'worker4':
                 iroha_functions.set_detail_to_node(config.iroha_worker4, config.network, config.chief_account_id,
-                                                   config.worker4_private_key, str(name) + '-weight', transaction)
+                                                   config.worker4_private_key, str(name) + '_weight', transaction)
                 print(transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
