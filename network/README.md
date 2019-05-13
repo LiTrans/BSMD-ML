@@ -78,7 +78,19 @@ sudo cp /opt/dependencies/c-ares/lib/libcares.so.2 /usr/lib/x86_64-linux-gnu/
 sudo cp /opt/dependencies/grpc/lib/libaddress_sorting.so /usr/lib/x86_64-linux-gnu/
 ```
 
-# Run Iroha
+# Run Iroha in one node
+Is possilbe to run Iroha in a single node. You can use this approach If you want to do tests before running Iroha in four nodes
+```shell
+irohad --config configSingle/config.sample --genesis_block configSingle/genesis.block --keypair_name configSingle/node0
+```
+
+## Aditional Commands
+If you like to clean and start fresh
+```shell
+irohad --config configSingle/config.sample --genesis_block configSingle/genesis.block --keypair_name  configSingle/node0 --overwrite_ledger
+```
+
+# Run Iroha in Four nodes
 On each machine do the following
 1. Open the [genesis.block](genesis.block) file and update the 'address' entry to correspond the ip of each machine. For example, the entry:
 ```json
@@ -94,14 +106,12 @@ will correspond to node0. Inspect the file [node0.pub](node0.pub) and see that `
 1. One each machine create the folder `config` and copy the [genesis.block](genesis.block) and the [config.sample](config.sample)
 
 3. On each machine run (change 'node0' to make it correspond with the machine, i.e., machine 2 is node1, machine 3 is node2 and so on)
-```
+```shell
 irohad --config config/config.sample --genesis_block config/genesis.block --keypair_name config/node0
 ```
 
 ## Aditional Commands
 If you like to clean and start fresh
-```
+```shell
 irohad --config config/config.sample --genesis_block config/genesis.block --keypair_name config/node0 --overwrite_ledger
 ```
-
-
