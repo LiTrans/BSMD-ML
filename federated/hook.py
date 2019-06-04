@@ -238,7 +238,7 @@ class _FederatedHook(tf.train.SessionRunHook):
                   established.
          """
         serialized = pickle.dumps(arrays_to_send)
-        print('name: ', name)
+
         transaction_data = dict()
         transaction_data['Process'] = 'BSMD-ML'
         transaction_data['Received from'] = name
@@ -254,29 +254,31 @@ class _FederatedHook(tf.train.SessionRunHook):
         worker_names = [config.worker1_account_id, config.worker2_account_id, config.worker3_account_id,
                         config.worker4_account_id]
 
-        if name == 'chief':
-            for worker in range(tot_workers - 1):
-                iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
-                                                   config.chief_private_key, 'chief_weight', transaction)
-                print(worker_names[worker])
-                print(transaction)
-        else:
-            if name == 'worker1':
-                iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
-                                                   config.worker1_private_key, str(name) + '_weight', transaction)
-                print(transaction)
-            if name == 'worker2':
-                iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
-                                                   config.worker2_private_key, str(name) + '_weight', transaction)
-                print(transaction)
-            if name == 'worker3':
-                iroha_functions.set_detail_to_node(config.iroha_worker3, config.network, config.chief_account_id,
-                                                   config.worker3_private_key, str(name) + '_weight', transaction)
-                print(transaction)
-            if name == 'worker4':
-                iroha_functions.set_detail_to_node(config.iroha_worker4, config.network, config.chief_account_id,
-                                                   config.worker4_private_key, str(name) + '_weight', transaction)
-                print(transaction)
+        # print('nombre para ', name)
+
+        # if name == 'chief':
+        #     for worker in range(tot_workers -1):
+        #         # iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
+        #         #                                    config.chief_private_key, 'chief_weight', transaction)
+        #         print(worker_names[worker])
+        #         print(transaction)
+        # else:
+        #     if name == 'worker1':
+        #         # iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
+        #         #                                    config.worker1_private_key, str(name) + '_weight', transaction)
+        #         print(transaction)
+        #     if name == 'worker2':
+        #         # iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
+        #         #                                    config.worker2_private_key, str(name) + '_weight', transaction)
+        #         print(transaction)
+        #     if name == 'worker3':
+        #         # iroha_functions.set_detail_to_node(config.iroha_worker3, config.network, config.chief_account_id,
+        #         #                                    config.worker3_private_key, str(name) + '_weight', transaction)
+        #         print(transaction)
+        #     if name == 'worker4':
+        #         # iroha_functions.set_detail_to_node(config.iroha_worker4, config.network, config.chief_account_id,
+        #         #                                    config.worker4_private_key, str(name) + '_weight', transaction)
+        #         print(transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
@@ -385,6 +387,7 @@ class _FederatedHook(tf.train.SessionRunHook):
             print('Starting Initialization')
             client_socket = self._start_socket_worker()
             broadcasted_weights = self._get_np_array(client_socket)
+            # time.sleep(15)
             feed_dict = {}
             for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
                 feed_dict[placeh] = brweigh
@@ -415,8 +418,12 @@ class _FederatedHook(tf.train.SessionRunHook):
          """
         step_value = run_values.results
         session = run_context.session
+        # print('step_value', step_value)
+        # print('self._interval_steps', self._interval_steps)
         if step_value % self._interval_steps == 0 and not step_value == 0:
+            # print('after session')
             if self._is_chief:
+                # print('after session')
                 self._server_socket.listen(self.num_workers - 1)
                 gathered_weights = [session.run(tf.trainable_variables())]
                 users = []
@@ -480,6 +487,7 @@ class _FederatedHook(tf.train.SessionRunHook):
                 session.run(self._update_local_vars_op, feed_dict=feed_dict)
 
             else:
+                # print('after session')
                 worker_socket = self._start_socket_worker()
                 print('Sending weights')
                 value = session.run(tf.trainable_variables())
