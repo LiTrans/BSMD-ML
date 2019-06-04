@@ -47,6 +47,7 @@ num_stride_conv2d_ensemble = []
 maxpool_size_ensemble = []
 
 # The data structures in the following data files are different from those in ensemble paper
+logger = open("logger.txt", "w+")
 X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
 Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
 
@@ -166,6 +167,12 @@ class _LoggerHook(tf.train.SessionRunHook):
                                                                     self._total_acc / N_BATCHES))
             self._total_loss = 0
             self._total_acc = 0
+            # Only log the chief
+            if FLAGS.worker_name == 'chief':
+                logger.write("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES) + 1, EPOCHS,
+                                                                               self._total_loss / N_BATCHES,
+                                                                               self._total_acc / N_BATCHES) + '\n')
+
 
 
 class _InitHook(tf.train.SessionRunHook):
@@ -174,12 +181,12 @@ class _InitHook(tf.train.SessionRunHook):
     def after_create_session(self, session, coord):
         """ Run this after creating session """
         session.run(dataset_init_op, feed_dict={X_placeholder: X_train, Y_placeholder: Y_train, batch_size: BATCH_SIZE,
-            shuffle_size: SHUFFLE_SIZE})
+                                                shuffle_size: SHUFFLE_SIZE})
 
 
 with tf.name_scope('monitored_session'):
     with tf.train.MonitoredTrainingSession(checkpoint_dir=CHECKPOINT_DIR,
-            hooks=[_LoggerHook(), _InitHook(), federated_hook], config=SESS_CONFIG,
-            save_checkpoint_steps=N_BATCHES) as mon_sess:
+                                           hooks=[_LoggerHook(), _InitHook(), federated_hook], config=SESS_CONFIG,
+                                           save_checkpoint_steps=N_BATCHES) as mon_sess:
         while not mon_sess.should_stop():
             mon_sess.run(train_op)
