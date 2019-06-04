@@ -16,8 +16,8 @@
 # =============================================================================="""
 
 # """
-# We use the bellow code for data transactions of large variable in the BSMD.
-# In particular we use the socket implementation of coMind for transfering weights
+# We use the bellow code for data transactions of large variables in the BSMD.
+# In particular we use the socket implementation of coMind for transferring weights
 # and we add a second layer to record all transactions in the BSMD
 # """
 

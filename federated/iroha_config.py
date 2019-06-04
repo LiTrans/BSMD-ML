@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import hashlib
 from iroha import Iroha, IrohaGrpc
 from iroha import IrohaCrypto
