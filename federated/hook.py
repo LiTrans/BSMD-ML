@@ -28,10 +28,10 @@ import hmac
 import tensorflow as tf
 import numpy as np
 import json
-from config import SSL_CONF as SC
-from config import SEND_RECEIVE_CONF as SRC
+from iroha_config import SSL_CONF as SC
+from iroha_config import SEND_RECEIVE_CONF as SRC
 import iroha_functions
-import config
+import iroha_config
 
 try:
     import cPickle as pickle
@@ -251,41 +251,49 @@ class _FederatedHook(tf.train.SessionRunHook):
         json_in_ledger = str(transaction_json)
         transaction = json_in_ledger.replace('"', '')
 
-        worker_names = [config.worker1_account_id, config.worker2_account_id, config.worker3_account_id,
-                        config.worker4_account_id]
+        worker_names = [iroha_config.worker1_account_id, iroha_config.worker2_account_id, 
+                        iroha_config.worker3_account_id, iroha_config.worker4_account_id, 
+                        iroha_config.worker5_account_id, iroha_config.worker6_account_id,
+                        iroha_config.worker7_account_id, iroha_config.worker8_account_id, 
+                        iroha_config.worker9_account_id]
 
-        # print('nombre para ', name)
-
-        # if name == 'chief':
-        #     for worker in range(tot_workers -1):
-        #         # iroha_functions.set_detail_to_node(config.iroha_chief, config.network, worker_names[worker],
-        #         #                                    config.chief_private_key, 'chief_weight', transaction)
-        #         print(worker_names[worker])
-        #         print(transaction)
-        # else:
-        #     if name == 'worker1':
-        #         # iroha_functions.set_detail_to_node(config.iroha_worker1, config.network, config.chief_account_id,
-        #         #                                    config.worker1_private_key, str(name) + '_weight', transaction)
-        #         print(transaction)
-        #     if name == 'worker2':
-        #         # iroha_functions.set_detail_to_node(config.iroha_worker2, config.network, config.chief_account_id,
-        #         #                                    config.worker2_private_key, str(name) + '_weight', transaction)
-        #         print(transaction)
-        #     if name == 'worker3':
-        #         # iroha_functions.set_detail_to_node(config.iroha_worker3, config.network, config.chief_account_id,
-        #         #                                    config.worker3_private_key, str(name) + '_weight', transaction)
-        #         print(transaction)
-        #     if name == 'worker4':
-        #         # iroha_functions.set_detail_to_node(config.iroha_worker4, config.network, config.chief_account_id,
-        #         #                                    config.worker4_private_key, str(name) + '_weight', transaction)
-        #         print(transaction)
+        if name == 'chief':
+            for worker in range(tot_workers -1):
+                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, iroha_config.network, worker_names[worker],
+                                                   iroha_config.chief_private_key, 'chief_weight', transaction)
+        else:
+            if name == 'worker1':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker1_private_key, str(name) + '_weight', transaction)
+            if name == 'worker2':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker2, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker2_private_key, str(name) + '_weight', transaction)
+            if name == 'worker3':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker3, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker3_private_key, str(name) + '_weight', transaction)
+            if name == 'worker4':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker4, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker4_private_key, str(name) + '_weight', transaction)
+            if name == 'worker5':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker5, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker5_private_key, str(name) + '_weight', transaction)
+            if name == 'worker6':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker6, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker6_private_key, str(name) + '_weight', transaction)
+            if name == 'worker7':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker7, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker7_private_key, str(name) + '_weight', transaction)
+            if name == 'worker8':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker8, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker8_private_key, str(name) + '_weight', transaction)
+            if name == 'worker9':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker9, iroha_config.network, iroha_config.chief_account_id,
+                                                   iroha_config.worker9_private_key, str(name) + '_weight', transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
         message = signature + serialized
 
-        # print('message + signature: ' + message)
-        # 814426
         connection_socket.settimeout(240)
         connection_socket.sendall(message)
         while True:
@@ -363,7 +371,6 @@ class _FederatedHook(tf.train.SessionRunHook):
                     print('SENDING Worker: ' + address[0] + ':' + str(address[1]))
                     self._send_np_array(session.run(tf.trainable_variables()), connection_socket, self._worker_name, 0,
                                         len(users) + 1)
-                    # print('sending variables: ' + tf.trainable_variables())
                     print('SENT Worker {}'.format(len(users)))
                     users.append(connection_socket)
                     addresses.append(address)
@@ -387,7 +394,6 @@ class _FederatedHook(tf.train.SessionRunHook):
             print('Starting Initialization')
             client_socket = self._start_socket_worker()
             broadcasted_weights = self._get_np_array(client_socket)
-            # time.sleep(15)
             feed_dict = {}
             for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
                 feed_dict[placeh] = brweigh
@@ -418,12 +424,8 @@ class _FederatedHook(tf.train.SessionRunHook):
          """
         step_value = run_values.results
         session = run_context.session
-        # print('step_value', step_value)
-        # print('self._interval_steps', self._interval_steps)
         if step_value % self._interval_steps == 0 and not step_value == 0:
-            # print('after session')
             if self._is_chief:
-                # print('after session')
                 self._server_socket.listen(self.num_workers - 1)
                 gathered_weights = [session.run(tf.trainable_variables())]
                 users = []
@@ -487,7 +489,6 @@ class _FederatedHook(tf.train.SessionRunHook):
                 session.run(self._update_local_vars_op, feed_dict=feed_dict)
 
             else:
-                # print('after session')
                 worker_socket = self._start_socket_worker()
                 print('Sending weights')
                 value = session.run(tf.trainable_variables())

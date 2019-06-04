@@ -69,3 +69,48 @@ worker4_public_key = IrohaCrypto.derive_public_key(worker4_private_key)
 worker4_name = 'worker4'
 worker4_account_id = worker4_name + '@' + domain_id
 iroha_worker4 = Iroha('worker4@choice')
+
+#worker5 node
+######################
+worker5_private_key = '333611dc29d0ed8c1ed9de9eb629280f8fc745aecbed5c7b80d2c024a088a2a8'
+worker5_public_key = IrohaCrypto.derive_public_key(worker5_private_key)
+worker5_name = 'worker5'
+worker5_account_id = worker5_name + '@' + domain_id
+iroha_worker5 = Iroha('worker5@choice')
+
+#worker6 node
+######################
+worker6_private_key = '116737445ed840fef349d6e61bd5fe3762e153ceb4042b2045d5bb7bcc149b43'
+worker6_public_key = IrohaCrypto.derive_public_key(worker6_private_key)
+worker6_name = 'worker6'
+worker6_account_id = worker6_name + '@' + domain_id
+iroha_worker6 = Iroha('worker6@choice')
+
+#worker7 node
+######################
+worker7_private_key = '64d2a5d10ec6ef4059423a4c0a2636b11c222d0729aaf64f0b3457f1664696e1'
+worker7_public_key = IrohaCrypto.derive_public_key(worker7_private_key)
+worker7_name = 'worker7'
+worker7_account_id = worker7_name + '@' + domain_id
+iroha_worker7 = Iroha('worker7@choice')
+
+#worker8 node
+######################
+worker8_private_key = '3c08c360f0d69eff638c50609d11c57cd9aeaaca9f55e6808f5e008fdcd3788e'
+worker8_public_key = IrohaCrypto.derive_public_key(worker8_private_key)
+worker8_name = 'worker8'
+worker8_account_id = worker8_name + '@' + domain_id
+iroha_worker8 = Iroha('worker8@choice')
+
+#worker9 node
+######################
+worker9_private_key = '3587faf346d017b6e103332f681a9a109bb599ed7ee52c6441e2afe78b2fab40'
+worker9_public_key = IrohaCrypto.derive_public_key(worker9_private_key)
+worker9_name = 'worker9'
+worker9_account_id = worker9_name + '@' + domain_id
+iroha_worker9 = Iroha('worker9@choice')
+
+# To create private and public keys for nodes use
+# user_p_key = IrohaCrypto.private_key()
+# print('private: ', user_p_key)
+# print('public: ', IrohaCrypto.derive_public_key(user_p_key))

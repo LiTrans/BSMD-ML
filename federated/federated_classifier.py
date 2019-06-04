@@ -15,10 +15,6 @@
 # https://comind.org/
 # ==============================================================================
 
-# TensorFlow and tf.keras
-# import tensorflow as tf
-# from tensorflow import keras
-
 # CNN mode detection
 from Mode_Detection_CNN import *
 
@@ -65,38 +61,16 @@ num_stride_conv2d_ensemble = []
 maxpool_size_ensemble = []
 
 # The data structures in the following data files are different from those in ensemble paper
-if FLAGS.worker_name == 'chief':
-    # print('jefe')
-    # X_train = np.load("X_train_final.npy")
-    # Y_train = np.load("Y_train_final.npy")
-    # X_train = np.array_split(X_train, federated_hook.num_workers)[federated_hook.task_index]
-    # Y_train = np.array_split(Y_train, federated_hook.num_workers)[federated_hook.task_index]
-    X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
-    Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
-else:
-    # print('worker')
-    X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
-    Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
+X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
+Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
 
-############################################
-############################################
-# I believe we need to split the data, one piece for each worker
-# I don't know if this is the proper way for splitting the data
-############################################
-############################################
-# X_train = np.load("X_train_final.npy")
-# Y_train = np.load("Y_train_final.npy")
-# X_train = np.array_split(X_train, federated_hook.num_workers)[federated_hook.task_index]
-# Y_train = np.array_split(Y_train, federated_hook.num_workers)[federated_hook.task_index]
 
 # You can safely tune this variable
 SHUFFLE_SIZE = X_train.shape[0]
 
-# print(Y_train.shape)
 Y_onehot = np.zeros((Y_train.shape[0], 4))
 Y_onehot[np.arange(Y_train.shape[0]), Y_train] = 1
 Y_train = np.copy(Y_onehot)
-# print(Y_train.shape)
 print('Data loaded')
 
 CHECKPOINT_DIR = 'logs_dir/federated_{}/{}'.format(FLAGS.worker_name, time())
