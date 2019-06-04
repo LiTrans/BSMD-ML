@@ -1,4 +1,10 @@
-This experiment runs a federated learning algorithm with four nodes. All transactions are recorded in the BSMD and we use sockets for data transfers
+This experiment runs a federated learning algorithm with 10 nodes, 1 chief and 9 workers. In broad terms the experiment follows the next steps.
+1. The chief node opens a connection socket and send the trained model to the workers nodes 
+2. Ther worker nodes re-train the model with their local data and send the results to the chief node
+3. The chief node averages the results and send the average to all workers
+4. Step 2 and 3 are repeated until EPOCH = 100
+
+All transactions are recorded in the BSMD and we use sockets for data transfers
 
 The [hook.py](hook.py) file is based on the code made by [coMindOrg](https://comind.org) in particular we use the [federated-sockets](https://github.com/coMindOrg/federated-averaging-tutorials/tree/master/federated-sockets) example as reference.
 
@@ -6,17 +12,16 @@ The [hook.py](hook.py) file is based on the code made by [coMindOrg](https://com
 
 Generate a private key and a certificate with: `openssl req -new -x509 -days 365 -nodes -out server.pem -keyout server.key`
 
-> `SSL_CONF.key_path = Path to your private key`
+In the [iroha_config.py](iroha_config.py) file modify the lines 
 
-> `SSL_CONF.cert_path = Path to your certificate`
-
-Set the paths `SSL_CONF.key_path`and `SSL_CONF.cert_path` where you store the private key and certificate
-
-In the [iroha_config.py](iroha_config.py) file modify the line 
 ```python
-network = IrohaGrpc('localhost:50051')
+SSL_CONF.key_path = Path/to/your/private_key
+SSL_CONF.cert_path = Path/to/your/certificate
+.
+.
+.
+network = IrohaGrpc('localhost:50051') # replace localhost for the IP of one of the nodes running the BSMD
 ```
-and replace localhost for the IP of one of the nodes running the BSMD.
 
 
 In the [federated_classifier.py](federated_classifier.py) file modify the parameters 
