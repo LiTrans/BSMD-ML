@@ -40,17 +40,18 @@ os.environ['CUDA_VISIBLE_DEVICES'] = ''
 # You can safely tune these variables
 # BATCH_SIZE = 25
 EPOCHS = 100
-INTERVAL_STEPS = 1 # Steps between averages
-WAIT_TIME = 15 # How many seconds to wait for new workers to connect
+INTERVAL_STEPS = 1  # Steps between averages
+WAIT_TIME = 15  # How many seconds to wait for new workers to connect
 # -----------------
 
 # Set these IPs to your own, can leave as localhost for local testing
-CHIEF_PUBLIC_IP = '192.168.0.106:7777' # Public IP of the chief worker
-CHIEF_PRIVATE_IP = '192.168.0.106:7777' # Private IP of the chief worker
+CHIEF_PUBLIC_IP = '192.168.0.106:7777'  # Public IP of the chief worker
+CHIEF_PRIVATE_IP = '192.168.0.106:7777'  # Private IP of the chief worker
 
 # Create the custom hook
 FLAGS = flags.FLAGS
-federated_hook = _FederatedHook(FLAGS.is_chief, FLAGS.worker_name, CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, WAIT_TIME, INTERVAL_STEPS,)
+federated_hook = _FederatedHook(FLAGS.is_chief, FLAGS.worker_name, CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, WAIT_TIME,
+                                INTERVAL_STEPS, )
 
 # parameters definition
 num_channels_ensemble = [5]
@@ -63,7 +64,6 @@ maxpool_size_ensemble = []
 # The data structures in the following data files are different from those in ensemble paper
 X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
 Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
-
 
 # You can safely tune this variable
 SHUFFLE_SIZE = X_train.shape[0]
@@ -150,7 +150,6 @@ with tf.name_scope('train'):
 
 SESS_CONFIG = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
 
-
 # make the batch size equal to the number of training routes
 BATCH_SIZE = X_train.shape[0]
 N_BATCHES = int(X_train.shape[0] / BATCH_SIZE)
@@ -177,30 +176,25 @@ class _LoggerHook(tf.train.SessionRunHook):
         self._total_loss += loss_value
         self._total_acc += acc_value
         if (step_value + 1) % N_BATCHES == 0:
-            print("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(
-                int(step_value / N_BATCHES) + 1,
-                EPOCHS, self._total_loss / N_BATCHES,
-                self._total_acc / N_BATCHES))
+            print("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES) + 1, EPOCHS,
+                                                                    self._total_loss / N_BATCHES,
+                                                                    self._total_acc / N_BATCHES))
             self._total_loss = 0
             self._total_acc = 0
 
 
 class _InitHook(tf.train.SessionRunHook):
     """ Hook to initialize the data set """
+
     def after_create_session(self, session, coord):
         """ Run this after creating session """
-        session.run(dataset_init_op, feed_dict={
-            X_placeholder: X_train,
-            Y_placeholder: Y_train,
-            batch_size: BATCH_SIZE,
+        session.run(dataset_init_op, feed_dict={X_placeholder: X_train, Y_placeholder: Y_train, batch_size: BATCH_SIZE,
             shuffle_size: SHUFFLE_SIZE})
 
 
 with tf.name_scope('monitored_session'):
-    with tf.train.MonitoredTrainingSession(
-            checkpoint_dir=CHECKPOINT_DIR,
-            hooks=[_LoggerHook(), _InitHook(), federated_hook],
-            config=SESS_CONFIG,
+    with tf.train.MonitoredTrainingSession(checkpoint_dir=CHECKPOINT_DIR,
+            hooks=[_LoggerHook(), _InitHook(), federated_hook], config=SESS_CONFIG,
             save_checkpoint_steps=N_BATCHES) as mon_sess:
         while not mon_sess.should_stop():
             mon_sess.run(train_op)
