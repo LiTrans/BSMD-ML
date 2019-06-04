@@ -3,7 +3,7 @@ from iroha.primitive_pb2 import can_set_my_account_detail
 from iroha import Iroha, IrohaGrpc
 from iroha import IrohaCrypto
 import binascii
-import config
+import iroha_config
 import sys
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
@@ -69,14 +69,14 @@ def create_account_user(name, public_key, domain_id, asset_qty, asset_id):
                        account_name=name,
                        domain_id=domain_id,
                        public_key=public_key)])
-    IrohaCrypto.sign_transaction(tx, config.admin_private_key)
+    IrohaCrypto.sign_transaction(tx, iroha_config.admin_private_key)
     send_transaction_and_print_status(tx, network)
 
     # 2. Create credit for the user
     tx = iroha.transaction([iroha.command('AddAssetQuantity',
                                           asset_id=asset_id,
                                           amount=asset_qty)])
-    IrohaCrypto.sign_transaction(tx, config.admin_private_key)
+    IrohaCrypto.sign_transaction(tx, iroha_config.admin_private_key)
     send_transaction_and_print_status(tx, network)
 
     # 3. Transfer credit to the user
@@ -88,7 +88,7 @@ def create_account_user(name, public_key, domain_id, asset_qty, asset_id):
                       asset_id=asset_id,
                       description='initial credit',
                       amount=asset_qty)])
-    IrohaCrypto.sign_transaction(tx, config.admin_private_key)
+    IrohaCrypto.sign_transaction(tx, iroha_config.admin_private_key)
     send_transaction_and_print_status(tx, network)
 
 
@@ -333,12 +333,12 @@ def get_block(height):
     balance: "1000"
     ]
     """
-    config.iroha.blocks_query()
-    query = config.iroha.query('GetBlock',
+    iroha_config.iroha.blocks_query()
+    query = iroha_config.iroha.query('GetBlock',
                         height=height)
-    IrohaCrypto.sign_query(query, config.admin_private_key)
+    IrohaCrypto.sign_query(query, iroha_config.admin_private_key)
 
-    block = config.network.send_query(query)
+    block = iroha_config.network.send_query(query)
     print(block)
     return block
 
