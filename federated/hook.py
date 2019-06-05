@@ -259,48 +259,39 @@ class _FederatedHook(tf.train.SessionRunHook):
         if name == 'chief':
             for worker in range(tot_workers - 1):
                 start = time.time()
-                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, iroha_config.network, worker_names[worker],
+                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, worker_names[worker],
                                                    iroha_config.chief_private_key, 'chief_weight', transaction)
                 end = time.time()
                 logger = open('logger.txt', 'a')
                 logger.write('ledger txn: ' + str(end - start) + '\n')
         else:
             if name == 'worker1':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker1_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.chief_account_id, 
+                                                   iroha_config.worker1_private_key, str(name) + '_weight', transaction)
             if name == 'worker2':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker2, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker2_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker2, iroha_config.chief_account_id, 
+                                                   iroha_config.worker2_private_key, str(name) + '_weight', transaction)
             if name == 'worker3':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker3, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker3_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker3, iroha_config.chief_account_id, 
+                                                   iroha_config.worker3_private_key, str(name) + '_weight', transaction)
             if name == 'worker4':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker4, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker4_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker4, iroha_config.chief_account_id, 
+                                                   iroha_config.worker4_private_key, str(name) + '_weight', transaction)
             if name == 'worker5':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker5, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker5_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker5, iroha_config.chief_account_id,
+                                                   iroha_config.worker5_private_key, str(name) + '_weight', transaction)
             if name == 'worker6':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker6, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker6_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker6, iroha_config.chief_account_id,
+                                                   iroha_config.worker6_private_key, str(name) + '_weight', transaction)
             if name == 'worker7':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker7, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker7_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker7, iroha_config.chief_account_id,
+                                                   iroha_config.worker7_private_key, str(name) + '_weight', transaction)
             if name == 'worker8':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker8, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker8_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker8, iroha_config.chief_account_id,
+                                                   iroha_config.worker8_private_key, str(name) + '_weight', transaction)
             if name == 'worker9':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker9, iroha_config.network,
-                                                   iroha_config.chief_account_id, iroha_config.worker9_private_key,
-                                                   str(name) + '_weight', transaction)
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker9, iroha_config.chief_account_id,
+                                                   iroha_config.worker9_private_key, str(name) + '_weight', transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize

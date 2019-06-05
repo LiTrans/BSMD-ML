@@ -24,7 +24,7 @@ SSL_CONF.cert_path = 'server.pem'
 ######################
 asset_id = 'fedcoin#federated'
 # Replace localhost with an IP address of a node running the blockchain
-network = IrohaGrpc('localhost:50051')
+network = IrohaGrpc('18.222.113.73:50051')
 domain_id = 'federated'
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
 iroha = Iroha('admin@test')
@@ -113,6 +113,6 @@ worker9_account_id = worker9_name + '@' + domain_id
 iroha_worker9 = Iroha('worker9@choice')
 
 # To create private and public keys for nodes use
-# user_p_key = IrohaCrypto.private_key()
-# print('private: ', user_p_key)
-# print('public: ', IrohaCrypto.derive_public_key(user_p_key))
+user_p_key = IrohaCrypto.private_key()
+print('private: ', user_p_key)
+print('public: ', IrohaCrypto.derive_public_key('f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'))
