@@ -4,7 +4,8 @@ import hashlib
 from iroha import Iroha, IrohaGrpc
 from iroha import IrohaCrypto
 
-#socket configuration
+# socket configuration
+########################
 SEND_RECEIVE_CONF = lambda x: x
 SEND_RECEIVE_CONF.key = b'4C5jwen4wpNEjBeq1YmdBayIQ1oD'
 SEND_RECEIVE_CONF.hashfunction = hashlib.sha1
@@ -18,13 +19,21 @@ SSL_CONF = lambda x: x
 SSL_CONF.key_path = 'server.key'
 SSL_CONF.cert_path = 'server.pem'
 
+# Federated learner configuration
+##################################
+BATCH_SIZE = 25
+EPOCHS = 100
+INTERVAL_STEPS = 1  # Steps between averages
+WAIT_TIME = 5  # How many seconds to wait for new workers to connect
+CHIEF_PUBLIC_IP = 'localhost:7777'  # Public IP of the chief worker
+CHIEF_PRIVATE_IP = 'localhost:7777'  # Private IP of the chief worker
 
 
 # BSMD configuration
 ######################
 asset_id = 'fedcoin#federated'
 # Replace localhost with an IP address of a node running the blockchain
-network = IrohaGrpc('18.222.113.73:50051')
+network = IrohaGrpc('localhost:50051')
 domain_id = 'federated'
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
 iroha = Iroha('admin@test')

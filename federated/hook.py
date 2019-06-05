@@ -94,12 +94,11 @@ class _FederatedHook(tf.train.SessionRunHook):
               interval_steps (int, optional): number of steps between two
                     "average op", which specifies how frequent a model
                     synchronization is performed.
-              wait_time: how mucht time the chief should wait at the beginning
+              wait_time: how long the chief should wait at the beginning
                     for the workers to connect.
          """
         self._is_chief = is_chief
         self._worker_name = worker_name
-        print(worker_name)
         self._private_ip = private_ip.split(':')[0]
         self._private_port = int(private_ip.split(':')[1])
         self._public_ip = public_ip.split(':')[0]
@@ -222,25 +221,29 @@ class _FederatedHook(tf.train.SessionRunHook):
               connection_socket (socket): a socket with a connection already
                   established.
          """
-
         message = self._receiving_subroutine(connection_socket)
-        final_image = pickle.loads(message)
-        return final_image
+        name, final_image = pickle.loads(message)
+        return name, final_image
 
     @staticmethod
-    # def _send_np_array(arrays_to_send, connection_socket, name, epoch_total, iteration, accuracy, loss):
-    def _send_np_array(arrays_to_send, connection_socket, name, iteration, tot_workers):
+    def _send_np_array(arrays_to_send, connection_socket, sender, iteration, tot_workers, receiver):
 
-        """Routine to send a list of numpy arrays. It sends it as many time as necessary
-            Args:
-              connection_socket (socket): a socket with a connection already
-                  established.
-         """
-        serialized = pickle.dumps(arrays_to_send)
+        """
+        Send weights to nodes via a socket. Also write the transaction in the BSMD
+        :param arrays_to_send: weight to be send
+        :param connection_socket:
+        :param sender: name of the sender
+        :param iteration: iteration number in the federated process
+        :param tot_workers: total number of node in the federated process
+        :param receiver: name of the receiver
+        :return:
+        """
+
+        serialized = pickle.dumps([sender,arrays_to_send])
 
         transaction_data = dict()
         transaction_data['Process'] = 'BSMD-ML'
-        transaction_data['Received from'] = name
+        transaction_data['Received from'] = sender
         # in this example weights are send using a socket, but you can write the address
         # were the weight is stored (e.g., see https://ipfs.io/)
         transaction_data['address'] = 'address'
@@ -255,43 +258,50 @@ class _FederatedHook(tf.train.SessionRunHook):
                         iroha_config.worker5_account_id, iroha_config.worker6_account_id,
                         iroha_config.worker7_account_id, iroha_config.worker8_account_id,
                         iroha_config.worker9_account_id]
-
-        if name == 'chief':
-            for worker in range(tot_workers - 1):
+        worker = int(connection_socket.fileno()) - 10
+        if sender == 'chief':
+            if receiver == 'first':
                 start = time.time()
                 iroha_functions.set_detail_to_node(iroha_config.iroha_chief, worker_names[worker],
                                                    iroha_config.chief_private_key, 'chief_weight', transaction)
                 end = time.time()
                 logger = open('logger.txt', 'a')
                 logger.write('ledger txn: ' + str(end - start) + '\n')
+            else:
+                start = time.time()
+                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, str(receiver) + '@' + iroha_config.domain_id,
+                                                   iroha_config.chief_private_key, 'chief_weight', transaction)
+                end = time.time()
+                logger = open('logger.txt', 'a')
+                logger.write('ledger txn: ' + str(end - start) + '\n')
         else:
-            if name == 'worker1':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.chief_account_id, 
-                                                   iroha_config.worker1_private_key, str(name) + '_weight', transaction)
-            if name == 'worker2':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker2, iroha_config.chief_account_id, 
-                                                   iroha_config.worker2_private_key, str(name) + '_weight', transaction)
-            if name == 'worker3':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker3, iroha_config.chief_account_id, 
-                                                   iroha_config.worker3_private_key, str(name) + '_weight', transaction)
-            if name == 'worker4':
-                iroha_functions.set_detail_to_node(iroha_config.iroha_worker4, iroha_config.chief_account_id, 
-                                                   iroha_config.worker4_private_key, str(name) + '_weight', transaction)
-            if name == 'worker5':
+            if sender == 'worker1':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.chief_account_id,
+                                                   iroha_config.worker1_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker2':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker2, iroha_config.chief_account_id,
+                                                   iroha_config.worker2_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker3':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker3, iroha_config.chief_account_id,
+                                                   iroha_config.worker3_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker4':
+                iroha_functions.set_detail_to_node(iroha_config.iroha_worker4, iroha_config.chief_account_id,
+                                                   iroha_config.worker4_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker5':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker5, iroha_config.chief_account_id,
-                                                   iroha_config.worker5_private_key, str(name) + '_weight', transaction)
-            if name == 'worker6':
+                                                   iroha_config.worker5_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker6':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker6, iroha_config.chief_account_id,
-                                                   iroha_config.worker6_private_key, str(name) + '_weight', transaction)
-            if name == 'worker7':
+                                                   iroha_config.worker6_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker7':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker7, iroha_config.chief_account_id,
-                                                   iroha_config.worker7_private_key, str(name) + '_weight', transaction)
-            if name == 'worker8':
+                                                   iroha_config.worker7_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker8':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker8, iroha_config.chief_account_id,
-                                                   iroha_config.worker8_private_key, str(name) + '_weight', transaction)
-            if name == 'worker9':
+                                                   iroha_config.worker8_private_key, str(sender) + '_weight', transaction)
+            if sender == 'worker9':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker9, iroha_config.chief_account_id,
-                                                   iroha_config.worker9_private_key, str(name) + '_weight', transaction)
+                                                   iroha_config.worker9_private_key, str(sender) + '_weight', transaction)
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
@@ -373,7 +383,7 @@ class _FederatedHook(tf.train.SessionRunHook):
                 try:
                     print('SENDING Worker: ' + address[0] + ':' + str(address[1]))
                     self._send_np_array(session.run(tf.trainable_variables()), connection_socket, self._worker_name, 0,
-                                        len(users) + 1)
+                                        len(users) + 1, 'first')
                     print('SENT Worker {}'.format(len(users)))
                     users.append(connection_socket)
                     addresses.append(address)
@@ -396,7 +406,7 @@ class _FederatedHook(tf.train.SessionRunHook):
         else:
             print('Starting Initialization')
             client_socket = self._start_socket_worker()
-            broadcasted_weights = self._get_np_array(client_socket)
+            name, broadcasted_weights = self._get_np_array(client_socket)
             feed_dict = {}
             for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
                 feed_dict[placeh] = brweigh
@@ -432,6 +442,7 @@ class _FederatedHook(tf.train.SessionRunHook):
                 self._server_socket.listen(self.num_workers - 1)
                 gathered_weights = [session.run(tf.trainable_variables())]
                 users = []
+                names = []
                 addresses = []
                 for i in range(self.num_workers - 1):
                     try:
@@ -449,9 +460,10 @@ class _FederatedHook(tf.train.SessionRunHook):
                         print('Some workers could not connect')
                         break
                     try:
-                        recieved = self._get_np_array(connection_socket)
-                        gathered_weights.append(recieved)
+                        name, received = self._get_np_array(connection_socket)
+                        gathered_weights.append(received)
                         users.append(connection_socket)
+                        names.append(name)
                         addresses.append(address)
                         print('Received from ' + address[0] + ':' + str(address[1]))
                     except (ConnectionResetError, BrokenPipeError):
@@ -474,10 +486,12 @@ class _FederatedHook(tf.train.SessionRunHook):
                 for i, elem in enumerate(rearranged_weights):
                     rearranged_weights[i] = np.mean(elem, axis=0)
 
+
                 for i, user in enumerate(users):
                     try:
                         start = time.time()
-                        self._send_np_array(rearranged_weights, user, self._worker_name, step_value, self.num_workers)
+                        self._send_np_array(rearranged_weights, user, self._worker_name, step_value, self.num_workers,
+                                            names[i])
                         end = time.time()
                         logger = open('logger.txt', 'a')
                         logger.write('send weights: ' + str(end - start) + '\n')
@@ -499,8 +513,8 @@ class _FederatedHook(tf.train.SessionRunHook):
                 worker_socket = self._start_socket_worker()
                 print('Sending weights')
                 value = session.run(tf.trainable_variables())
-                self._send_np_array(value, worker_socket, self._worker_name, step_value, self.num_workers)
-                broadcasted_weights = self._get_np_array(worker_socket)
+                self._send_np_array(value, worker_socket, self._worker_name, step_value, self.num_workers, 'chief')
+                name, broadcasted_weights = self._get_np_array(worker_socket)
                 feed_dict = {}
                 for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
                     feed_dict[placeh] = brweigh

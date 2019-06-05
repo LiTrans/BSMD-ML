@@ -9,6 +9,7 @@ from hook import _FederatedHook
 # Helper libraries
 import os
 import numpy as np
+from iroha_config import CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, BATCH_SIZE, EPOCHS, INTERVAL_STEPS, WAIT_TIME
 from time import time
 
 flags = tf.app.flags
@@ -22,21 +23,13 @@ flags.DEFINE_string("file_Y", None, "file name: Y_Worker_1, Y_Worker_2, Y_Worker
 # Enable it when testing in different computers
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
-# You can safely tune these variables
-# BATCH_SIZE = 25
-EPOCHS = 100
-INTERVAL_STEPS = 1  # Steps between averages
-WAIT_TIME = 15  # How many seconds to wait for new workers to connect
-# -----------------
 
-# Set these IPs to your own, can leave as localhost for local testing
-CHIEF_PUBLIC_IP = '192.168.0.106:7777'  # Public IP of the chief worker
-CHIEF_PRIVATE_IP = '192.168.0.106:7777'  # Private IP of the chief worker
+start_time = time()
 
 # Create the custom hook
 FLAGS = flags.FLAGS
 federated_hook = _FederatedHook(FLAGS.is_chief, FLAGS.worker_name, CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, WAIT_TIME,
-                                INTERVAL_STEPS, )
+                                INTERVAL_STEPS)
 
 # parameters definition
 num_channels_ensemble = [5]
@@ -191,3 +184,7 @@ with tf.name_scope('monitored_session'):
                                            save_checkpoint_steps=N_BATCHES) as mon_sess:
         while not mon_sess.should_stop():
             mon_sess.run(train_op)
+
+end_time = time()
+
+logger.write('Total time' + str(end_time - start_time) + '\n')
