@@ -162,16 +162,17 @@ class _LoggerHook(tf.train.SessionRunHook):
         self._total_loss += loss_value
         self._total_acc += acc_value
         if (step_value + 1) % N_BATCHES == 0:
-            print("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES) + 1, EPOCHS,
+            print("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
                                                                     self._total_loss / N_BATCHES,
                                                                     self._total_acc / N_BATCHES))
-            self._total_loss = 0
-            self._total_acc = 0
             # Only log the chief
             if FLAGS.worker_name == 'chief':
-                logger.write("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES) + 1, EPOCHS,
+                logger.write("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
                                                                                self._total_loss / N_BATCHES,
                                                                                self._total_acc / N_BATCHES) + '\n')
+            self._total_loss = 0
+            self._total_acc = 0
+
 
 
 
