@@ -9,17 +9,15 @@ if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
 
 
-
-
 def trace(func):
     """
     A decorator for tracing methods' begin/end execution points
     """
     def tracer(*args, **kwargs):
         name = func.__name__
-        print('\tEntering "{}"'.format(name))
+        # print('\tEntering "{}"'.format(name))
         result = func(*args, **kwargs)
-        print('\tLeaving "{}"'.format(name))
+        # print('\tLeaving "{}"'.format(name))
         return result
     return tracer
 
@@ -34,11 +32,11 @@ def send_transaction_and_print_status(transaction):
     """
     # print(transaction)
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
-    print('Transaction hash = {}, creator = {}'.format(
-        hex_hash, transaction.payload.reduced_payload.creator_account_id))
+    # print('Transaction hash = {}, creator = {}'.format(
+    #     hex_hash, transaction.payload.reduced_payload.creator_account_id))
     iroha_config.network.send_tx(transaction)
-    for status in iroha_config.network.tx_status_stream(transaction):
-        print(status)
+    # for status in iroha_config.network.tx_status_stream(transaction):
+        # print(status)
 
 
 @trace
