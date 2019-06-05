@@ -20,18 +20,15 @@ SSL_CONF.cert_path = Path/to/your/certificate
 .
 .
 .
-network = IrohaGrpc('localhost:50051') # replace localhost for the IP of one of the nodes running the BSMD
-```
-
-
-In the [federated_classifier.py](federated_classifier.py) file modify the parameters 
-```python
 # Set these IPs of the computer associated to the chief node
 # for local testing use localhost
 CHIEF_PUBLIC_IP = 'localhost:7777' # Public IP of the chief worker
 CHIEF_PRIVATE_IP = 'localhost:7777' # Private IP of the chief worker
+.
+.
+.
+network = IrohaGrpc('localhost:50051') # replace localhost for the IP of one of the nodes running the BSMD
 ```
-
 To setup the federated nodes run
 ```shell
 python3 Setup.py
