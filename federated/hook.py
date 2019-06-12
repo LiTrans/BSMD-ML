@@ -258,6 +258,7 @@ class _FederatedHook(tf.train.SessionRunHook):
                         iroha_config.worker5_account_id, iroha_config.worker6_account_id,
                         iroha_config.worker7_account_id, iroha_config.worker8_account_id,
                         iroha_config.worker9_account_id]
+
         worker = int(connection_socket.fileno()) - 10
         if sender == 'chief':
             if receiver == 'first':
@@ -382,8 +383,9 @@ class _FederatedHook(tf.train.SessionRunHook):
                     break
                 try:
                     print('SENDING Worker: ' + address[0] + ':' + str(address[1]))
+                    # _send_np_array(arrays_to_send, connection_socket, sender, iteration, tot_workers, receiver):
                     self._send_np_array(session.run(tf.trainable_variables()), connection_socket, self._worker_name, 0,
-                                        len(users) + 1, 'first')
+                                        self.num_workers, 'first')
                     print('SENT Worker {}'.format(len(users)))
                     users.append(connection_socket)
                     addresses.append(address)
@@ -486,10 +488,10 @@ class _FederatedHook(tf.train.SessionRunHook):
                 for i, elem in enumerate(rearranged_weights):
                     rearranged_weights[i] = np.mean(elem, axis=0)
 
-
                 for i, user in enumerate(users):
                     try:
                         start = time.time()
+                        # _send_np_array(arrays_to_send, connection_socket, sender, iteration, tot_workers, receiver):
                         self._send_np_array(rearranged_weights, user, self._worker_name, step_value, self.num_workers,
                                             names[i])
                         end = time.time()

@@ -84,6 +84,6 @@ iroha_functions.grants_access_to_set_details(iroha_config.iroha_worker9, iroha_c
 
 print('**********************************')
 print('**********************************')
-print('The BSMD is created and iroha_configured')
+print('The BSMD is created and iroha configured')
 print('**********************************')
 print('**********************************')

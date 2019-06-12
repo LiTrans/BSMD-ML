@@ -40,7 +40,7 @@ num_stride_conv2d_ensemble = []
 maxpool_size_ensemble = []
 
 # The data structures in the following data files are different from those in ensemble paper
-logger = open("logger.txt", "w+")
+logger = open("logger.txt", "a")
 X_train = np.load("train_sets/{}.npy".format(FLAGS.file_X))
 Y_train = np.load("train_sets/{}.npy".format(FLAGS.file_Y))
 
@@ -160,7 +160,7 @@ class _LoggerHook(tf.train.SessionRunHook):
                                                                     self._total_acc / N_BATCHES))
             # Only log the chief
             if FLAGS.worker_name == 'chief':
-                logger.write("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
+                logger.write(";Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
                                                                                self._total_loss / N_BATCHES,
                                                                                self._total_acc / N_BATCHES) + '\n')
             self._total_loss = 0
@@ -187,4 +187,4 @@ with tf.name_scope('monitored_session'):
 
 end_time = time()
 
-logger.write('Total time' + str(end_time - start_time) + '\n')
+logger.write(';Total time: ' + str(end_time - start_time) + '\n')
