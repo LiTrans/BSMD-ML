@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# https://comind.org/
+# https://INTERVAL_STEPS % step_value.org/
 # =============================================================================="""
 
 # """
@@ -438,6 +438,7 @@ class _FederatedHook(tf.train.SessionRunHook):
             their graph.
          """
         step_value = run_values.results
+        # print('step value: ', step_value, self._interval_steps)
         session = run_context.session
         if step_value % self._interval_steps == 0 and not step_value == 0:
             if self._is_chief:

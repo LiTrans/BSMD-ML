@@ -130,7 +130,7 @@ with tf.name_scope('train'):
 SESS_CONFIG = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
 
 # make the batch size equal to the number of training routes
-BATCH_SIZE = X_train.shape[0]
+# BATCH_SIZE = X_train.shape[0]
 N_BATCHES = int(X_train.shape[0] / BATCH_SIZE)
 LAST_STEP = int(N_BATCHES * EPOCHS)
 
@@ -154,13 +154,19 @@ class _LoggerHook(tf.train.SessionRunHook):
         # print(loss_value, acc_value, step_value)
         self._total_loss += loss_value
         self._total_acc += acc_value
+
+        if FLAGS.worker_name == 'chief':
+            if (step_value) % INTERVAL_STEPS == 1:
+                logger.write('The averaged epoch is: ')
+                print('Below is the Averaged Epoch')
+
         if (step_value + 1) % N_BATCHES == 0:
             print("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
                                                                     self._total_loss / N_BATCHES,
                                                                     self._total_acc / N_BATCHES))
             # Only log the chief
             if FLAGS.worker_name == 'chief':
-                logger.write(";Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
+                logger.write("Epoch {}/{} - loss: {:.4f} - acc: {:.4f}".format(int(step_value / N_BATCHES), EPOCHS,
                                                                                self._total_loss / N_BATCHES,
                                                                                self._total_acc / N_BATCHES) + '\n')
             self._total_loss = 0
@@ -187,4 +193,4 @@ with tf.name_scope('monitored_session'):
 
 end_time = time()
 
-logger.write(';Total time: ' + str(end_time - start_time) + '\n')
+logger.write('Total time: ' + str(end_time - start_time) + '\n')

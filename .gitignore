@@ -120,3 +120,5 @@ dmypy.json
 iroha-cli
 irohad
 
+train_sets/
+

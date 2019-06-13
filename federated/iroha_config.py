@@ -21,12 +21,12 @@ SSL_CONF.cert_path = 'server.pem'
 
 # Federated learner configuration
 ##################################
-BATCH_SIZE = 25
-EPOCHS = 100
-INTERVAL_STEPS = 1  # Steps between averages
+BATCH_SIZE = 16
+EPOCHS = 250
+INTERVAL_STEPS = 15  # Steps between averages
 WAIT_TIME = 5  # How many seconds to wait for new workers to connect
-CHIEF_PUBLIC_IP = 'localhost:7777'  # Public IP of the chief worker
-CHIEF_PRIVATE_IP = 'localhost:7777'  # Private IP of the chief worker
+CHIEF_PUBLIC_IP = '192.168.0.106:7777'  # Public IP of the chief worker
+CHIEF_PRIVATE_IP = '192.168.0.106:7777'  # Private IP of the chief worker
 
 
 # BSMD configuration
