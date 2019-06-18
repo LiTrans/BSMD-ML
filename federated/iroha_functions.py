@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 from iroha.primitive_pb2 import can_set_my_account_detail
-from iroha import Iroha, IrohaGrpc
 from iroha import IrohaCrypto
 import binascii
-import iroha_config
+import federated.iroha_config as iroha_config
 import sys
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
@@ -15,9 +14,9 @@ def trace(func):
     """
     def tracer(*args, **kwargs):
         name = func.__name__
-        # print('\tEntering "{}"'.format(name))
+        print('\tEntering "{}"'.format(name))
         result = func(*args, **kwargs)
-        # print('\tLeaving "{}"'.format(name))
+        print('\tLeaving "{}"'.format(name))
         return result
     return tracer
 
@@ -32,11 +31,11 @@ def send_transaction_and_print_status(transaction):
     """
     # print(transaction)
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
-    # print('Transaction hash = {}, creator = {}'.format(
-    #     hex_hash, transaction.payload.reduced_payload.creator_account_id))
+    print('Transaction hash = {}, creator = {}'.format(
+        hex_hash, transaction.payload.reduced_payload.creator_account_id))
     iroha_config.network.send_tx(transaction)
-    # for status in iroha_config.network.tx_status_stream(transaction):
-        # print(status)
+    for status in iroha_config.network.tx_status_stream(transaction):
+        print(status)
 
 
 @trace

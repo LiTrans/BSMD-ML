@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 
 # CNN mode detection
-from Mode_Detection_CNN import *
+from federated.Mode_Detection_CNN import *
 
 # Custom federated hook
-from hook import _FederatedHook
+from federated.hook import _FederatedHook
 
 # Helper libraries
 import os
-import numpy as np
-from iroha_config import CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, BATCH_SIZE, EPOCHS, INTERVAL_STEPS, WAIT_TIME
+import federated.numpy as np
+from federated.iroha_config import CHIEF_PRIVATE_IP, CHIEF_PUBLIC_IP, BATCH_SIZE, EPOCHS, INTERVAL_STEPS, WAIT_TIME
 from time import time
+import federated.tensorflow as tf
 
 flags = tf.app.flags
 

@@ -33,7 +33,7 @@ CHIEF_PRIVATE_IP = '192.168.0.106:7777'  # Private IP of the chief worker
 ######################
 asset_id = 'fedcoin#federated'
 # Replace localhost with an IP address of a node running the blockchain
-network = IrohaGrpc('localhost:50051')
+network = IrohaGrpc('192.168.0.146:50051')
 domain_id = 'federated'
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
 iroha = Iroha('admin@test')
@@ -106,7 +106,7 @@ iroha_worker6 = Iroha('worker6@federated')
 
 # worker7 node
 ######################
-worker7_private_key = '64d2a5d10ec6ef4059423a4c0a2636b11c222d0729aaf64f0b3457f1664696e1'
+worker7_private_key = '303db8234e576a9f158d7e909dda6b560a95520182c9bc069fdeaed330e33e15'
 worker7_public_key = IrohaCrypto.derive_public_key(worker7_private_key)
 worker7_name = 'worker7'
 worker7_account_id = worker7_name + '@' + domain_id
@@ -130,7 +130,7 @@ worker9_name = 'worker9'
 worker9_account_id = worker9_name + '@' + domain_id
 iroha_worker9 = Iroha('worker9@federated')
 
-# To create private and public keys for nodes use
+# # To create private and public keys for nodes use
 # user_p_key = IrohaCrypto.private_key()
 # print('private: ', user_p_key)
 # print('public: ', IrohaCrypto.derive_public_key('f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'))

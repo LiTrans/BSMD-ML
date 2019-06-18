@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import binascii
 import sys
-import iroha_functions
-import iroha_config
+import federated.iroha_functions as iroha_functions
+import federated.iroha_config as iroha_config
 
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')
@@ -25,7 +25,7 @@ iroha_functions.create_account_user(iroha_config.worker5_name, iroha_config.work
                                     '1000', iroha_config.asset_id)
 iroha_functions.create_account_user(iroha_config.worker6_name, iroha_config.worker6_public_key, iroha_config.domain_id,
                                     '1000', iroha_config.asset_id)
-iroha_functions.create_account_user(iroha_config.worker7_name, iroha_config.worker5_public_key, iroha_config.domain_id,
+iroha_functions.create_account_user(iroha_config.worker7_name, iroha_config.worker7_public_key, iroha_config.domain_id,
                                     '1000', iroha_config.asset_id)
 iroha_functions.create_account_user(iroha_config.worker8_name, iroha_config.worker8_public_key, iroha_config.domain_id,
                                     '1000', iroha_config.asset_id)
