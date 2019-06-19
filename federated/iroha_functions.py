@@ -31,11 +31,11 @@ def send_transaction_and_print_status(transaction):
     """
     # print(transaction)
     hex_hash = binascii.hexlify(IrohaCrypto.hash(transaction))
-    print('Transaction hash = {}, creator = {}'.format(
-        hex_hash, transaction.payload.reduced_payload.creator_account_id))
+    # print('Transaction hash = {}, creator = {}'.format(
+    #     hex_hash, transaction.payload.reduced_payload.creator_account_id))
     iroha_config.network.send_tx(transaction)
-    for status in iroha_config.network.tx_status_stream(transaction):
-        print(status)
+    # for status in iroha_config.network.tx_status_stream(transaction):
+    #     print(status)
 
 
 @trace
