@@ -33,7 +33,7 @@ CHIEF_PRIVATE_IP = '192.168.0.106:7777'  # Private IP of the chief worker
 ######################
 asset_id = 'fedcoin#federated'
 # Replace localhost with an IP address of a node running the blockchain
-network = IrohaGrpc('192.168.0.150:50051')
+network = IrohaGrpc('18.191.46.178:50051')
 domain_id = 'federated'
 admin_private_key = 'f101537e319568c765b2cc89698325604991dca57b9716b58016b253506cab70'
 iroha = Iroha('admin@test')
