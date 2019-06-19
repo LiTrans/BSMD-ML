@@ -131,7 +131,7 @@ with tf.name_scope('train'):
 SESS_CONFIG = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
 
 # make the batch size equal to the number of training routes
-# BATCH_SIZE = X_train.shape[0]
+BATCH_SIZE = X_train.shape[0]
 N_BATCHES = int(X_train.shape[0] / BATCH_SIZE)
 LAST_STEP = int(N_BATCHES * EPOCHS)
 
