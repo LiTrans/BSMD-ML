@@ -195,3 +195,4 @@ with tf.name_scope('monitored_session'):
 end_time = time()
 
 logger.write('Total time: ' + str(end_time - start_time) + '\n')
+logger.close()

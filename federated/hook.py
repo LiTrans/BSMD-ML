@@ -266,16 +266,19 @@ class _FederatedHook(tf.train.SessionRunHook):
                 iroha_functions.set_detail_to_node(iroha_config.iroha_chief, worker_names[0],
                                                    iroha_config.chief_private_key, 'chief_weight', transaction)
                 end = time.time()
-                logger = open('logger.txt', 'a')
+                logger = open('logger-ledger.txt', 'a')
                 logger.write('ledger txn: ' + str(end - start) + '\n')
+                logger.close()
             else:
                 start = time.time()
                 iroha_functions.set_detail_to_node(iroha_config.iroha_chief, str(receiver) + '@' + iroha_config.domain_id,
                                                    iroha_config.chief_private_key, 'chief_weight', transaction)
                 end = time.time()
-                logger = open('logger.txt', 'a')
+                logger = open('logger-ledger.txt', 'a')
                 logger.write('ledger txn: ' + str(end - start) + '\n')
+                logger.close()
         else:
+            start = time.time()
             if sender == 'worker1':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker1, iroha_config.chief_account_id,
                                                    iroha_config.worker1_private_key, str(sender) + '_weight', transaction)
@@ -303,6 +306,10 @@ class _FederatedHook(tf.train.SessionRunHook):
             if sender == 'worker9':
                 iroha_functions.set_detail_to_node(iroha_config.iroha_worker9, iroha_config.chief_account_id,
                                                    iroha_config.worker9_private_key, str(sender) + '_weight', transaction)
+            end = time.time()
+            logger = open('logger-ledger-worker.txt', 'a')
+            logger.write('ledger txn: ' + str(end - start) + '\n')
+            # logger.close()
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
@@ -496,8 +503,9 @@ class _FederatedHook(tf.train.SessionRunHook):
                         self._send_np_array(rearranged_weights, user, self._worker_name, step_value, self.num_workers,
                                             names[i])
                         end = time.time()
-                        # logger = open('logger.txt', 'a')
-                        # logger.write('send weights: ' + str(end - start) + '\n')
+                        logger = open('logger-weights.txt', 'a')
+                        logger.write('send weights: ' + str(end - start) + '\n')
+                        logger.close()
                         user.close()
                     except (ConnectionResetError, BrokenPipeError):
                         print('Fallen Worker: ' + addresses[i][0] + ':' + str(address[i][1]))
@@ -516,7 +524,12 @@ class _FederatedHook(tf.train.SessionRunHook):
                 worker_socket = self._start_socket_worker()
                 print('Sending weights')
                 value = session.run(tf.trainable_variables())
+                start = time.time()
                 self._send_np_array(value, worker_socket, self._worker_name, step_value, self.num_workers, 'chief')
+                end = time.time()
+                logger = open('logger-weights-worker.txt', 'a')
+                logger.write('send weights: ' + str(end - start) + '\n')
+                # logger.close()
                 name, broadcasted_weights = self._get_np_array(worker_socket)
                 feed_dict = {}
                 for placeh, brweigh in zip(self._placeholders, broadcasted_weights):
