@@ -31,7 +31,7 @@ import json
 from iroha_config import SSL_CONF as SC
 from iroha_config import SEND_RECEIVE_CONF as SRC
 import iroha_config
-
+import iroha_functions
 
 try:
     import cPickle as pickle
