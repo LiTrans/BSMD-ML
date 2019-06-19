@@ -263,7 +263,7 @@ class _FederatedHook(tf.train.SessionRunHook):
         if sender == 'chief':
             if receiver == 'first':
                 start = time.time()
-                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, worker_names[worker],
+                iroha_functions.set_detail_to_node(iroha_config.iroha_chief, worker_names[0],
                                                    iroha_config.chief_private_key, 'chief_weight', transaction)
                 end = time.time()
                 logger = open('logger.txt', 'a')

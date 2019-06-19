@@ -14,9 +14,9 @@ def trace(func):
     """
     def tracer(*args, **kwargs):
         name = func.__name__
-        print('\tEntering "{}"'.format(name))
+        # print('\tEntering "{}"'.format(name))
         result = func(*args, **kwargs)
-        print('\tLeaving "{}"'.format(name))
+        # print('\tLeaving "{}"'.format(name))
         return result
     return tracer
 
