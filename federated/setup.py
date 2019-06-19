@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import binascii
 import sys
-import federated.iroha_functions as iroha_functions
-import federated.iroha_config as iroha_config
+import iroha_functions
+import iroha_config
 
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')

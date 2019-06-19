@@ -2,7 +2,7 @@
 from iroha.primitive_pb2 import can_set_my_account_detail
 from iroha import IrohaCrypto
 import binascii
-import federated.iroha_config as iroha_config
+import iroha_config as iroha_config
 import sys
 if sys.version_info[0] < 3:
     raise Exception('Python 3 or a more recent version is required.')

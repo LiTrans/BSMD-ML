@@ -28,9 +28,9 @@ import hmac
 import tensorflow as tf
 import numpy as np
 import json
-from federated.iroha_config import SSL_CONF as SC
-from federated.iroha_config import SEND_RECEIVE_CONF as SRC
-import federated.iroha_config as iroha_config
+from iroha_config import SSL_CONF as SC
+from iroha_config import SEND_RECEIVE_CONF as SRC
+import iroha_config
 
 
 try:
