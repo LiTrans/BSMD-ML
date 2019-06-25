@@ -22,6 +22,7 @@
 # """
 
 import socket
+import sys
 import time
 import ssl
 import hmac
@@ -309,14 +310,19 @@ class _FederatedHook(tf.train.SessionRunHook):
             end = time.time()
             logger = open('logger-ledger-worker.txt', 'a')
             logger.write('ledger txn: ' + str(end - start) + '\n')
-            # logger.close()
+            logger.close()
 
         signature = hmac.new(SRC.key, serialized, SRC.hashfunction).digest()
         assert len(signature) == SRC.hashsize
         message = signature + serialized
+        print('byte size:', len(serialized))
+        print('byte size:', len(message))
 
         connection_socket.settimeout(240)
+        start = time.time()
         connection_socket.sendall(message)
+        end = time.time()
+        print('send weghts in: ' + str(end - start) + '\n')
         while True:
             check = connection_socket.recv(len(SRC.error))
             if check == SRC.error:
