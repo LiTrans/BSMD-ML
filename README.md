@@ -1,7 +1,6 @@
 # Distributed Privacy-Aware Choice Modelling using Federated Learning
 
-Using the distributed principles of the blockchain, we propose a federated learning model for 
-choice modelling which is able to process distributed data from different sources without: 
+Using [Blockchain for Smart Mobility Data-market (BSMD)](https://github.com/billjee/bsmd), we propose a federated learning model for choice modelling which is able to process distributed data from different sources without: 
 1. Sharing personal raw information 
 2. Requiring to send the information to central cloud servers. 
 
